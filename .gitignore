@@ -1,0 +1,15 @@
+# Python venv
+.venv/
+venv/
+ENV/
+env/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
