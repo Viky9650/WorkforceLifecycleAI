@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "question": "Offboard user and revoke access",
+  "answer": "To offboard Zoro, please provide the following information:\n- Last working day\n- Exit interview notes\n\nOnce this is provided, the system will capture all actions and generate an audit log including:\n- audit_id\n- timestamp\n- revocation summary",
+  "sources": [
+    "architecture.md",
+    "offboarding_guide.md",
+    "security.md",
+    "onboarding_guide.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "architecture.md",
+      "offboarding_guide.md",
+      "security.md"
+    ],
+    "related": [
+      "architecture.md",
+      "offboarding_guide.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "question": "What is the onboarding process",
+  "answer": "Here's an overview of the onboarding process for Viky, an SRE:\n\n**Onboarding Goals:**\n*   Enable Viky to become productive quickly and safely.\n*   Provide role context and architecture overview.\n*   Grant required access and permissions.\n*   Outline training plan and first-week checklist.\n*   Identify support contacts and escalation paths.\n\n**Key Onboarding Steps:**\n\n*   **Day 0:**\n    *   Sign in to IAM / SSO.\n    *   Join Teams and relevant channels.\n    *   Access Jira project and boards.\n    *   Access GitHub organization and team repositories.\n    *   Access Confluence space and runbooks.\n    *   Set up DevOps Deploy App (CI/CD).\n    *   Complete Security Awareness training.\n*   **Day 1:**\n    *   Welcome session with manager.\n    *   IT system login validation.\n    *   Team introduction.\n    *   Slack workspace access.\n\n**Required System Access for SRE Roles:**\n*   IAM account\n*   Jira project access\n*   GitHub repository access\n*   Confluence space access\n*   Monitoring dashboards\n*   CI/CD pipeline access\n*   DevOps Deploy App\n\n**Training Schedule:**\n*   **Week 1:** Company culture & values, Architecture overview, Infrastructure walkthrough.\n*   **Week 2:** Kubernetes best practices, Incident response training, Security compliance overview.\n\n**Onboarding Documentation:**\n*   The primary onboarding documentation is located in **Confluence** under the **People Operations** space, on the **Employee Onboarding (Day 0\u201330)** page.\n*   If Viky does not have Confluence access, it can be requested via **ServiceNow \u2192 \u201cAccess Request: Confluence\u201d**.",
+  "sources": [
+    "onboarding_guide.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "onboarding_guide.md"
+    ],
+    "related": []
+  }
+}

@@ -1,0 +1,93 @@
+# config/access_policies.yml
+# Source of truth for role → systems → permissions.
+# The Provisioning Agent reads this file to decide what to grant/revoke.
+
+SRE:
+  systems: ["IAM", "Jira", "GitHub", "Confluence"]
+  iam:
+    groups: ["sre"]
+  jira:
+    projects: ["SRE"]
+    roles: ["Developer"]
+  github:
+    org: "demo-org"
+    teams: ["sre-team"]
+    repos: ["infra", "platform"]
+    permission: "push"
+  confluence:
+    spaces: ["SRE", "ENG"]
+
+Architect:
+  systems: ["IAM", "Jira", "GitHub", "Confluence"]
+  iam:
+    groups: ["architecture"]
+  jira:
+    projects: ["ARCH"]
+    roles: ["Viewer"]
+  github:
+    org: "demo-org"
+    teams: ["arch-team"]
+    repos: ["architecture-docs"]
+    permission: "pull"
+  confluence:
+    spaces: ["ARCH", "ENG"]
+
+DevOps Engineer:
+  systems:
+    ["IAM", "Jira", "GitHub", "Confluence", "Devops Deploy App", "Service Now", "Outlook", "Teams"]
+  iam:
+    groups: ["devops"]
+  jira:
+    projects: ["DEVOPS"]
+    roles: ["Developer"]
+  github:
+    org: "AISolutions"
+    team_slug: "devops-team"
+    ensure_repo: "onboardai-demo-repo"
+    repo_private: true
+    repo_permission: "push"
+  confluence:
+    spaces: ["DEVOPS", "ENG"]
+
+  devops_deploy_app:
+    environments: ["staging", "prod"]
+    permissions: ["deploy", "rollback"]
+  service_now:
+    groups: ["IT-DevOps"]
+    roles: ["itil"]
+  outlook:
+    mailbox: true
+    distribution_lists: ["eng-all@company.com", "devops@company.com"]
+  teams:
+    teams: ["Engineering", "DevOps"]
+    channels: ["announcements", "oncall", "deployments"]
+
+Infrastructure Specialist:
+  systems:
+    ["IAM", "Jira", "GitHub", "Confluence", "Devops Deploy App", "Service Now", "Outlook", "Teams"]
+  iam:
+    groups: ["infra"]
+  jira:
+    projects: ["INFRA"]
+    roles: ["Developer"]
+  github:
+    org: "demo-org"
+    teams: ["infra-team"]
+    repos: ["infra", "terraform", "k8s"]
+    permission: "push"
+  confluence:
+    spaces: ["INFRA", "ENG"]
+
+  devops_deploy_app:
+    environments: ["staging", "prod"]
+    permissions: ["deploy", "rollback", "view-logs"]
+  service_now:
+    groups: ["IT-Infra"]
+    roles: ["itil"]
+  outlook:
+    mailbox: true
+    distribution_lists: ["eng-all@company.com", "infra@company.com"]
+  teams:
+    teams: ["Engineering", "Infra"]
+    channels: ["announcements", "infra-support", "incidents"]
+

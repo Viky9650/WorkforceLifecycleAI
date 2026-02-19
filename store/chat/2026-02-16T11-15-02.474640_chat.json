@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "question": "Where is onboarding document?",
+  "answer": "I cannot find the onboarding document in the provided context. Please check the HR or IT department for onboarding documentation.",
+  "sources": [
+    "Manish_kt.json",
+    "architecture.md",
+    "security.md",
+    "Viky_kt.json"
+  ],
+  "sources_detail": {
+    "primary": [
+      "Manish_kt.json",
+      "architecture.md",
+      "security.md"
+    ],
+    "related": [
+      "Manish_kt.json",
+      "Viky_kt.json",
+      "architecture.md",
+      "security.md"
+    ]
+  }
+}

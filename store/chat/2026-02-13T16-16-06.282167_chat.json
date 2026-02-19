@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "question": "What access is required for the application?",
+  "answer": "The provided context does not specify the exact access required for the application. It outlines general access revocation procedures for offboarding, including IAM, GitHub, Jira, and Confluence. To determine the specific application access, please consult the \"Access Control Agent\" documentation, which manages access provisioning based on role.",
+  "sources": [
+    "Manish_kt.json",
+    "architecture.md",
+    "security.md",
+    "Viky_kt.json"
+  ],
+  "sources_detail": {
+    "primary": [
+      "Manish_kt.json",
+      "architecture.md",
+      "security.md"
+    ],
+    "related": [
+      "Manish_kt.json",
+      "Viky_kt.json",
+      "architecture.md",
+      "security.md"
+    ]
+  }
+}

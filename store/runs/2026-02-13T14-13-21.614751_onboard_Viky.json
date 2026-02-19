@@ -1,0 +1,98 @@
+{
+  "name": "Viky",
+  "role": "Devops",
+  "action": "onboard",
+  "question": "How to get onboarded",
+  "status": "Process completed",
+  "rag_context_preview": "## Deployment (High level)\n- Deployments flow: local \u2192 staging \u2192 production\n- Use CI/CD pipelines and keep logs/audit trails\n- Validate monitoring and alerts after deploy\n\n## Where to Find Information\n- Architecture doc: services + ownership\n- Security doc: RBAC + least privilege + audit requirements\n- Confluence: runbooks and operational procedures\n\n## Security Architecture\n\n### Authentication & Authorization\n\n- OAuth 2.0 for API authentication\n- JWT tokens for session management\n- Role-Based Access Control (RBAC)\n- Principle of least privilege\n\n### Data Security\n\n- Encryption at rest (database)\n- Encryption in transit (TLS/HTTPS)\n- PII handling compliance\n- Audit logging\n\n### API Security\n\n- Rate limiting\n- Input validation\n- SQL injection prevention\n- XSS protection\n- CORS configuration",
+  "rag_sources": {
+    "primary": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ],
+    "related": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  },
+  "access": {
+    "error": "Policy load failed: [Errno 2] No such file or directory: 'config/access_policies.yml'",
+    "audit_id": null
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "How to get onboarded",
+    "answer": "To get onboarded, follow these steps:\n\n1.  **Request baseline access**: IAM, Jira, GitHub, Confluence.\n2.  **Read architecture overview and security policy**.\n3.  **Set up local environment and required tooling**.\n4.  **Identify service owners and escalation paths**.\n\nThe onboarding flow involves a user submitting a request, which is then processed by an Orchestrator and Onboarding Agent. Access is provisioned by an Access Control Agent, and integrations are handled by Integration Services. A Knowledge Agent provides relevant documents, and a Report Agent tracks progress.\n\nSources: Onboarding Guide",
+    "sources": [
+      "architecture.md",
+      "onboarding_guide.md"
+    ],
+    "sources_detail": {
+      "primary": [
+        "architecture.md",
+        "onboarding_guide.md"
+      ],
+      "related": [
+        "architecture.md",
+        "onboarding_guide.md"
+      ]
+    }
+  },
+  "executive_report": {
+    "employee": "Viky",
+    "role": "Devops",
+    "action": "onboard",
+    "timestamp": "2026-02-13T14:13:21.614746Z",
+    "rag_sources": {
+      "primary": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ],
+      "related": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ]
+    },
+    "access": {
+      "error": "Policy load failed: [Errno 2] No such file or directory: 'config/access_policies.yml'",
+      "audit_id": null
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "How to get onboarded",
+      "answer": "To get onboarded, follow these steps:\n\n1.  **Request baseline access**: IAM, Jira, GitHub, Confluence.\n2.  **Read architecture overview and security policy**.\n3.  **Set up local environment and required tooling**.\n4.  **Identify service owners and escalation paths**.\n\nThe onboarding flow involves a user submitting a request, which is then processed by an Orchestrator and Onboarding Agent. Access is provisioned by an Access Control Agent, and integrations are handled by Integration Services. A Knowledge Agent provides relevant documents, and a Report Agent tracks progress.\n\nSources: Onboarding Guide",
+      "sources": [
+        "architecture.md",
+        "onboarding_guide.md"
+      ],
+      "sources_detail": {
+        "primary": [
+          "architecture.md",
+          "onboarding_guide.md"
+        ],
+        "related": [
+          "architecture.md",
+          "onboarding_guide.md"
+        ]
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}

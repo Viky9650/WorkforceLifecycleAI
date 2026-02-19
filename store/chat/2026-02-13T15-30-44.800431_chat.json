@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "question": "Where are the policy documents",
+  "answer": "I don't have enough information in the current docs.\n\nPlease refer to the \"Where to Find Information\" section for details on where to find specific types of documents.\n\nSources:\n- Where to Find Information",
+  "sources": [
+    "Viky_kt.json",
+    "architecture.md",
+    "onboarding_guide.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "Viky_kt.json",
+      "architecture.md",
+      "onboarding_guide.md"
+    ],
+    "related": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  }
+}

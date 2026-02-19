@@ -1,0 +1,282 @@
+{
+  "name": "vpanjiya",
+  "role": "DevOps Engineer",
+  "action": "onboard",
+  "question": "What access is required for the application?",
+  "status": "Process completed",
+  "rag_context_preview": "---\nSOURCE: onboarding_guide.md\n---\n\n# Required System Access (Role Based)\n\n## For SRE / DevOps Roles\n\n- IAM account\n- Jira project access\n- GitHub repository access\n- Confluence space access\n- Monitoring dashboards\n- CI/CD pipeline access\n- DevOps Deploy App\n- Microsoft Teams\n- Outlook mailbox\n\n---\n\n# Training Plan\n\n## Week 1\n\n- Company culture & values\n- Architecture overview\n- Infrastructure walkthrough\n- Security compliance overview\n\n## Week 2\n\n- Kubernetes best practices\n- Incident response training\n- Deployment pipeline deep dive\n\n---\n\n# Support & Contacts\n\nFor assistance during onboarding:\n\n---\nSOURCE: onboarding_guide.md\n---\n\n## Phase 2: Day 0 (First Login)\n\n1. Sign in to IAM / SSO\n2. Access corporate email (Outlook)\n3. Join Microsoft Teams + required channels\n4. Access Jira projec",
+  "rag_sources": {
+    "primary": [
+      "onboarding_guide.md"
+    ],
+    "related": []
+  },
+  "access": {
+    "action": "provision",
+    "user": "vpanjiya",
+    "role": "DevOps Engineer",
+    "audit_id": "AUD-55D7424836",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Failed",
+      "Confluence": "Granted",
+      "Devops Deploy App": "Granted",
+      "Service Now": "Granted",
+      "Outlook": "Granted",
+      "Teams": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "devops"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "DEVOPS"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Failed",
+        "error": "Client error '403 Forbidden' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "DEVOPS",
+            "ENG"
+          ]
+        }
+      },
+      {
+        "system": "Devops Deploy App",
+        "status": "Granted",
+        "details": {
+          "environments": [
+            "staging",
+            "prod"
+          ],
+          "permissions": [
+            "deploy",
+            "rollback"
+          ]
+        }
+      },
+      {
+        "system": "Service Now",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "IT-DevOps"
+          ],
+          "roles": [
+            "itil"
+          ]
+        }
+      },
+      {
+        "system": "Outlook",
+        "status": "Granted",
+        "details": {
+          "mailbox": true,
+          "distribution_lists": [
+            "eng-all@company.com",
+            "devops@company.com"
+          ]
+        }
+      },
+      {
+        "system": "Teams",
+        "status": "Granted",
+        "details": {
+          "teams": [
+            "Engineering",
+            "DevOps"
+          ],
+          "channels": [
+            "announcements",
+            "oncall",
+            "deployments"
+          ]
+        }
+      }
+    ],
+    "verified": false
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "What access is required for the application?",
+    "answer": "Access for role **DevOps Engineer** (from access policy):\n- IAM\n- Jira\n- GitHub\n- Confluence\n- Devops Deploy App\n- Service Now\n- Outlook\n- Teams",
+    "sources": [
+      "config/access_policies.yml"
+    ],
+    "sources_detail": {
+      "primary": [
+        "config/access_policies.yml"
+      ],
+      "related": []
+    }
+  },
+  "executive_report": {
+    "employee": "vpanjiya",
+    "role": "DevOps Engineer",
+    "action": "onboard",
+    "timestamp": "2026-02-17T15:24:49.745924Z",
+    "rag_sources": {
+      "primary": [
+        "onboarding_guide.md"
+      ],
+      "related": []
+    },
+    "access": {
+      "action": "provision",
+      "user": "vpanjiya",
+      "role": "DevOps Engineer",
+      "audit_id": "AUD-55D7424836",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Failed",
+        "Confluence": "Granted",
+        "Devops Deploy App": "Granted",
+        "Service Now": "Granted",
+        "Outlook": "Granted",
+        "Teams": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "devops"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "DEVOPS"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Failed",
+          "error": "Client error '403 Forbidden' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "DEVOPS",
+              "ENG"
+            ]
+          }
+        },
+        {
+          "system": "Devops Deploy App",
+          "status": "Granted",
+          "details": {
+            "environments": [
+              "staging",
+              "prod"
+            ],
+            "permissions": [
+              "deploy",
+              "rollback"
+            ]
+          }
+        },
+        {
+          "system": "Service Now",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "IT-DevOps"
+            ],
+            "roles": [
+              "itil"
+            ]
+          }
+        },
+        {
+          "system": "Outlook",
+          "status": "Granted",
+          "details": {
+            "mailbox": true,
+            "distribution_lists": [
+              "eng-all@company.com",
+              "devops@company.com"
+            ]
+          }
+        },
+        {
+          "system": "Teams",
+          "status": "Granted",
+          "details": {
+            "teams": [
+              "Engineering",
+              "DevOps"
+            ],
+            "channels": [
+              "announcements",
+              "oncall",
+              "deployments"
+            ]
+          }
+        }
+      ],
+      "verified": false
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "What access is required for the application?",
+      "answer": "Access for role **DevOps Engineer** (from access policy):\n- IAM\n- Jira\n- GitHub\n- Confluence\n- Devops Deploy App\n- Service Now\n- Outlook\n- Teams",
+      "sources": [
+        "config/access_policies.yml"
+      ],
+      "sources_detail": {
+        "primary": [
+          "config/access_policies.yml"
+        ],
+        "related": []
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}

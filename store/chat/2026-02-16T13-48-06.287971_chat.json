@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "question": "Where is onboarding document?",
+  "answer": "I cannot find information about onboarding documents in the provided context. The document is about employee offboarding. You may need to check with HR for onboarding documentation.",
+  "sources": [
+    "architecture.md",
+    "offboarding_guide.md",
+    "security.md",
+    "onboarding_guide.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "architecture.md",
+      "offboarding_guide.md",
+      "security.md"
+    ],
+    "related": [
+      "architecture.md",
+      "offboarding_guide.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  }
+}

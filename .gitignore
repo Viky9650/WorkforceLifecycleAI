@@ -1,0 +1,102 @@
+# ==============================
+# Virtual Environments
+# ==============================
+.venv/
+venv/
+ENV/
+env/
+
+# ==============================
+# Python Bytecode
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==============================
+# C Extensions
+# ==============================
+*.so
+*.dylib
+*.dll
+
+# ==============================
+# Distribution / Packaging
+# ==============================
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ==============================
+# Installer Logs
+# ==============================
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ==============================
+# Unit Test / Coverage Reports
+# ==============================
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+pytest_cache/
+nosetests.xml
+coverage.xml
+
+# ==============================
+# Jupyter Notebooks
+# ==============================
+.ipynb_checkpoints/
+
+# ==============================
+# IDEs & Editors
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==============================
+# OS Files
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# Environment Variables
+# ==============================
+.env
+.env.*
+*.env
+
+# ==============================
+# Logs
+# ==============================
+logs/
+*.log
+
+# ==============================
+# ML / AI Artifacts
+# ==============================
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+*.joblib
+*.pkl
+
+# Large datasets
+data/
+datasets/
+
+# ==============================
+# Temporary Files
+# ==============================
+tmp/
+temp/

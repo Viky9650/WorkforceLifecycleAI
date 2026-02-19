@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "question": "Where is onboarding document?",
+  "answer": "The provided context does not contain information about the location of the onboarding document. Please check with your manager or HR department for its location.",
+  "sources": [
+    "architecture.md",
+    "offboarding_guide.md",
+    "onboarding_guide.md",
+    "security.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "architecture.md",
+      "offboarding_guide.md",
+      "onboarding_guide.md"
+    ],
+    "related": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  }
+}

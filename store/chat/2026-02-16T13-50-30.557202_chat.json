@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "question": "how can you help me?",
+  "answer": "I can help with the offboarding process for Brook, an Infrastructure Specialist. This includes ensuring secure revocation of all system access, facilitating knowledge transfer, and maintaining compliance with security policies. The system will generate an audit trail for all offboarding events.",
+  "sources": [
+    "architecture.md",
+    "offboarding_guide.md",
+    "security.md",
+    "onboarding_guide.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "architecture.md",
+      "offboarding_guide.md",
+      "security.md"
+    ],
+    "related": [
+      "architecture.md",
+      "offboarding_guide.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  }
+}

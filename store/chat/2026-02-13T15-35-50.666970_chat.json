@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "question": "What access is required for the application?",
+  "answer": "The required access for the application includes:\n- IAM: user identity + role assignment\n- Jira: project access for assigned team/board\n- GitHub: access to required repos with least privilege\n- Confluence: access to team space + runbooks\n\nSources:\n- Security & Access Policy",
+  "sources": [
+    "architecture.md",
+    "security.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "architecture.md",
+      "security.md"
+    ],
+    "related": [
+      "architecture.md",
+      "security.md"
+    ]
+  }
+}
