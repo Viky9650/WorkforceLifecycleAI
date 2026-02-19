@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "question": "\u201cWhat happens during offboarding?\u201d",
+  "answer": "During offboarding for Viky (SRE), the following occurs:\n\n*   **HR Initiates:** HR will start the process with Viky's name, role, last working day, and exit interview notes.\n*   **Knowledge Transfer:** Viky's project ownership, system knowledge, runbooks, dashboard links, incident history, and deployment procedures will be captured and stored.\n*   **Access Revocation:** All system access will be revoked.\n*   **Audit Trail:** All offboarding events will be logged.\n\n**Next Step:** HR will initiate the offboarding process.",
+  "sources": [
+    "offboarding_guide.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "offboarding_guide.md"
+    ],
+    "related": []
+  }
+}

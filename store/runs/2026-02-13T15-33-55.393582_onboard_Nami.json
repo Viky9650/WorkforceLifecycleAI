@@ -1,0 +1,334 @@
+{
+  "name": "Nami",
+  "role": "Infra",
+  "action": "onboard",
+  "question": "Where are the docs?",
+  "status": "Process completed",
+  "rag_context_preview": "## Deployment (High level)\n- Deployments flow: local \u2192 staging \u2192 production\n- Use CI/CD pipelines and keep logs/audit trails\n- Validate monitoring and alerts after deploy\n\n## Where to Find Information\n- Architecture doc: services + ownership\n- Security doc: RBAC + least privilege + audit requirements\n- Confluence: runbooks and operational procedures\n\n**Document Store**: MongoDB (optional)\n- Unstructured data\n- Process documents\n- Flexible schema\n\n**Cache**: Redis\n- Session management\n- Rate limiting\n- Temporary data\n\n## Data Flow\n\n### Onboarding Flow\n\n## Audit & Compliance\n- Log access provisioning and revocation with a unique audit ID.\n- Maintain access review evidence.\n- Offboarding must revoke access on Day 0.\n\n## Offboarding Requirements\n- Revoke IAM, GitHub, Jira, Confluence immediate",
+  "rag_sources": {
+    "primary": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ],
+    "related": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  },
+  "access": {
+    "action": "provision",
+    "user": "Nami",
+    "role": "Infrastructure Specialist",
+    "audit_id": "AUD-BC95F2BC06",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Granted",
+      "Confluence": "Granted",
+      "Devops Deploy App": "Granted",
+      "Service Now": "Granted",
+      "Outlook": "Granted",
+      "Teams": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "infra"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "INFRA"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Granted",
+        "details": {
+          "org": "demo-org",
+          "teams": [
+            "infra-team"
+          ],
+          "repos": [
+            "infra",
+            "terraform",
+            "k8s"
+          ],
+          "permission": "push"
+        }
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "INFRA",
+            "ENG"
+          ]
+        }
+      },
+      {
+        "system": "Devops Deploy App",
+        "status": "Granted",
+        "details": {
+          "environments": [
+            "staging",
+            "prod"
+          ],
+          "permissions": [
+            "deploy",
+            "rollback",
+            "view-logs"
+          ]
+        }
+      },
+      {
+        "system": "Service Now",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "IT-Infra"
+          ],
+          "roles": [
+            "itil"
+          ]
+        }
+      },
+      {
+        "system": "Outlook",
+        "status": "Granted",
+        "details": {
+          "mailbox": true,
+          "distribution_lists": [
+            "eng-all@company.com",
+            "infra@company.com"
+          ]
+        }
+      },
+      {
+        "system": "Teams",
+        "status": "Granted",
+        "details": {
+          "teams": [
+            "Engineering",
+            "Infra"
+          ],
+          "channels": [
+            "announcements",
+            "infra-support",
+            "incidents"
+          ]
+        }
+      }
+    ],
+    "verified": true
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "Where are the docs?",
+    "answer": "You can find information in the following locations:\n- Architecture doc for services and ownership.\n- Security doc for RBAC, least privilege, and audit requirements.\n- Confluence for runbooks and operational procedures.\n\nSources: Where to Find Information",
+    "sources": [
+      "Viky_kt.json",
+      "architecture.md",
+      "onboarding_guide.md"
+    ],
+    "sources_detail": {
+      "primary": [
+        "Viky_kt.json",
+        "architecture.md",
+        "onboarding_guide.md"
+      ],
+      "related": [
+        "Viky_kt.json",
+        "architecture.md",
+        "onboarding_guide.md"
+      ]
+    }
+  },
+  "executive_report": {
+    "employee": "Nami",
+    "role": "Infra",
+    "action": "onboard",
+    "timestamp": "2026-02-13T15:33:55.393578Z",
+    "rag_sources": {
+      "primary": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ],
+      "related": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ]
+    },
+    "access": {
+      "action": "provision",
+      "user": "Nami",
+      "role": "Infrastructure Specialist",
+      "audit_id": "AUD-BC95F2BC06",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Granted",
+        "Confluence": "Granted",
+        "Devops Deploy App": "Granted",
+        "Service Now": "Granted",
+        "Outlook": "Granted",
+        "Teams": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "infra"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "INFRA"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Granted",
+          "details": {
+            "org": "demo-org",
+            "teams": [
+              "infra-team"
+            ],
+            "repos": [
+              "infra",
+              "terraform",
+              "k8s"
+            ],
+            "permission": "push"
+          }
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "INFRA",
+              "ENG"
+            ]
+          }
+        },
+        {
+          "system": "Devops Deploy App",
+          "status": "Granted",
+          "details": {
+            "environments": [
+              "staging",
+              "prod"
+            ],
+            "permissions": [
+              "deploy",
+              "rollback",
+              "view-logs"
+            ]
+          }
+        },
+        {
+          "system": "Service Now",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "IT-Infra"
+            ],
+            "roles": [
+              "itil"
+            ]
+          }
+        },
+        {
+          "system": "Outlook",
+          "status": "Granted",
+          "details": {
+            "mailbox": true,
+            "distribution_lists": [
+              "eng-all@company.com",
+              "infra@company.com"
+            ]
+          }
+        },
+        {
+          "system": "Teams",
+          "status": "Granted",
+          "details": {
+            "teams": [
+              "Engineering",
+              "Infra"
+            ],
+            "channels": [
+              "announcements",
+              "infra-support",
+              "incidents"
+            ]
+          }
+        }
+      ],
+      "verified": true
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "Where are the docs?",
+      "answer": "You can find information in the following locations:\n- Architecture doc for services and ownership.\n- Security doc for RBAC, least privilege, and audit requirements.\n- Confluence for runbooks and operational procedures.\n\nSources: Where to Find Information",
+      "sources": [
+        "Viky_kt.json",
+        "architecture.md",
+        "onboarding_guide.md"
+      ],
+      "sources_detail": {
+        "primary": [
+          "Viky_kt.json",
+          "architecture.md",
+          "onboarding_guide.md"
+        ],
+        "related": [
+          "Viky_kt.json",
+          "architecture.md",
+          "onboarding_guide.md"
+        ]
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}

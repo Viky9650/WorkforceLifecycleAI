@@ -1,0 +1,199 @@
+{
+  "name": "Viky",
+  "email": "viky@company.com",
+  "manager_email": "manager@company.com",
+  "role": "SRE",
+  "action": "onboard",
+  "question": "What access is required for the application?",
+  "status": "Process completed",
+  "rag_context_preview": "---\nSOURCE: onboarding_guide.md\n---\n\n# Required System Access (Role Based)\n\n## For SRE / DevOps Roles\n\n- IAM account\n- Jira project access\n- GitHub repository access\n- Confluence space access\n- Monitoring dashboards\n- CI/CD pipeline access\n- DevOps Deploy App\n- Microsoft Teams\n- Outlook mailbox\n\n---\n\n# Training Plan\n\n## Week 1\n\n- Company culture & values\n- Architecture overview\n- Infrastructure walkthrough\n- Security compliance overview\n\n## Week 2\n\n- Kubernetes best practices\n- Incident response training\n- Deployment pipeline deep dive\n\n---\n\n# Support & Contacts\n\nFor assistance during onboarding:\n\n---\nSOURCE: onboarding_guide.md\n---\n\n## Phase 2: Day 0 (First Login)\n\n1. Sign in to IAM / SSO\n2. Access corporate email (Outlook)\n3. Join Microsoft Teams + required channels\n4. Access Jira projec",
+  "rag_sources": {
+    "primary": [
+      "onboarding_guide.md"
+    ],
+    "related": []
+  },
+  "access": {
+    "action": "provision",
+    "user": "Viky",
+    "role": "SRE",
+    "audit_id": "AUD-273AF9AA8F",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Failed",
+      "Confluence": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "sre"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "SRE"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Failed",
+        "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "SRE",
+            "ENG"
+          ]
+        }
+      }
+    ],
+    "verified": false
+  },
+  "notifications": {
+    "slack": {
+      "provider": "slack",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "SLK-C8A120F27F",
+      "timestamp": "2026-02-18T13:36:09.307948+00:00",
+      "channel": "#hr-onboarding",
+      "text_preview": "Onboarding completed \u2705 (audit attached)",
+      "meta": {}
+    },
+    "email": {
+      "provider": "email",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "EML-98EEAF7A3A",
+      "timestamp": "2026-02-18T13:36:09.307930+00:00",
+      "to": [
+        "employee@company.com",
+        "hr@company.com",
+        "it-support@company.com"
+      ],
+      "subject": "Welcome! Your onboarding is complete \u2705",
+      "body_preview": "Welcome aboard! Your access has been provisioned.",
+      "meta": {}
+    }
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "What access is required for the application?",
+    "answer": "Access for role **SRE** (from access policy):\n- IAM\n- Jira\n- GitHub\n- Confluence",
+    "sources": [
+      "config/access_policies.yml"
+    ],
+    "sources_detail": {
+      "primary": [
+        "config/access_policies.yml"
+      ],
+      "related": []
+    }
+  },
+  "executive_report": {
+    "employee": "Viky",
+    "role": "SRE",
+    "action": "onboard",
+    "timestamp": "2026-02-18T13:36:09.322678Z",
+    "rag_sources": {
+      "primary": [
+        "onboarding_guide.md"
+      ],
+      "related": []
+    },
+    "access": {
+      "action": "provision",
+      "user": "Viky",
+      "role": "SRE",
+      "audit_id": "AUD-273AF9AA8F",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Failed",
+        "Confluence": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "sre"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "SRE"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Failed",
+          "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "SRE",
+              "ENG"
+            ]
+          }
+        }
+      ],
+      "verified": false
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "What access is required for the application?",
+      "answer": "Access for role **SRE** (from access policy):\n- IAM\n- Jira\n- GitHub\n- Confluence",
+      "sources": [
+        "config/access_policies.yml"
+      ],
+      "sources_detail": {
+        "primary": [
+          "config/access_policies.yml"
+        ],
+        "related": []
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}

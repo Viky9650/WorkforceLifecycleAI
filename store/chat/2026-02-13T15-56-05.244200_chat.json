@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "question": "What Employee roles are available here",
+  "answer": "The available employee roles are:\n*   DevOps / SRE\n*   Report Agent\n\nSources:\n- Onboarding Guide",
+  "sources": [
+    "architecture.md",
+    "onboarding_guide.md"
+  ],
+  "sources_detail": {
+    "primary": [
+      "architecture.md",
+      "onboarding_guide.md"
+    ],
+    "related": [
+      "architecture.md",
+      "onboarding_guide.md"
+    ]
+  }
+}

@@ -1,0 +1,104 @@
+
+
+source .venv/bin/activate
+cd OnboardAI
+PYTHONPATH=. uvicorn api.main:app --reload
+PYTHONPATH=. python -m uvicorn api.main:app --reload --port 9000
+
+uvicorn api.main:app --reload --port 9000
+
+
+http://127.0.0.1:9000/docs#/
+
+MCP
+PYTHONPATH=. uvicorn mcp_server.main:app --reload --port 9001
+http://127.0.0.1:9001/health
+PYTHONPATH=. python -m uvicorn mcp_server.main:app --reload --port 9001
+
+cd frontend/
+npm run dev
+http://localhost:3000
+
+
+
+Rebuild your RAG index
+
+From project root:
+
+rm -rf rag_index/
+python -m rag.ingest
+
+
+
+grep -R "text-embedding-004" -n .
+
+
+
+
+(.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % lsof -i :8000
+COMMAND    PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+Google    1508 viky   19u  IPv4 0x801cc006861af54a      0t0  TCP localhost:54430->localhost:irdmi (ESTABLISHED)
+Google    1508 viky   33u  IPv4 0x50b1ef25218e5cc1      0t0  TCP localhost:54544->localhost:irdmi (ESTABLISHED)
+Google    1508 viky   42u  IPv4 0x2a058bd2774df67d      0t0  TCP localhost:54546->localhost:irdmi (ESTABLISHED)
+Google    1508 viky   56u  IPv4 0xc9e5586122b0c7dc      0t0  TCP localhost:54451->localhost:irdmi (ESTABLISHED)
+Python    9278 viky    3u  IPv4 0x77d69693730daf21      0t0  TCP localhost:irdmi (LISTEN)
+Python    9283 viky    3u  IPv4 0x77d69693730daf21      0t0  TCP localhost:irdmi (LISTEN)
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % netstat -an | grep 8000
+tcp4     523      0  127.0.0.1.8000         127.0.0.1.54546        ESTABLISHED
+tcp4       0      0  127.0.0.1.54546        127.0.0.1.8000         ESTABLISHED
+tcp4     564      0  127.0.0.1.8000         127.0.0.1.54544        ESTABLISHED
+tcp4       0      0  127.0.0.1.54544        127.0.0.1.8000         ESTABLISHED
+tcp4     523      0  127.0.0.1.8000         127.0.0.1.54451        ESTABLISHED
+tcp4       0      0  127.0.0.1.54451        127.0.0.1.8000         ESTABLISHED
+tcp4     523      0  127.0.0.1.8000         127.0.0.1.54430        ESTABLISHED
+tcp4       0      0  127.0.0.1.54430        127.0.0.1.8000         ESTABLISHED
+tcp4       0      0  127.0.0.1.8000         *.*                    LISTEN     
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % kill -9 1508
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % lsof -i :8000          
+COMMAND  PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+Python  9278 viky    3u  IPv4 0x77d69693730daf21      0t0  TCP localhost:irdmi (LISTEN)
+Python  9283 viky    3u  IPv4 0x77d69693730daf21      0t0  TCP localhost:irdmi (LISTEN)
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % kill -9 9278
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % lsof -i :8000
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % 
+
+
+
+
+curl -sS -o /dev/null -w "%{http_code}\n" \
+  -H "Authorization: Bearer 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 \
+  -H "Accept: application/vnd.github+json" \
+  https://api.github.ibm.com/user
+
+
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % export GITHUB_TOKEN=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
+((.venv) ) viky@Vickeys-MacBook-Pro OnboardAI % curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" https://api.github.ibm.com/user
+{
+
+
+
+    pkill -f "uvicorn mcp_server.main"
+PYTHONPATH=. uvicorn mcp_server.main:app --reload --port 9001
+uvicorn main:app --reload --port 9001
+
+
+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
+
+GITHUB_TOKEN=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
+
+
+curl -H "Authorization: Bearer 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" \
+     https://api.github.ibm.com/orgs/AISolutions/members/vpanjiya
+
+
+
+If changing the root directry name 
+
+echo $PATH | tr ':' '\n' | head -n 15
+
+rm -rf .venv
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+

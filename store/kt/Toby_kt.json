@@ -1,0 +1,13 @@
+{
+  "captured": true,
+  "timestamp": "2026-02-17T16:15:13.664924Z",
+  "employee": "Toby",
+  "checklist": [
+    "Runbooks and operational notes captured",
+    "Dashboards/alerts ownership documented",
+    "Escalation paths + contacts listed",
+    "Open incidents and known issues documented",
+    "Outstanding tickets handed over"
+  ],
+  "notes": "KT: runbooks, dashboards, incident ownership, deployment steps."
+}

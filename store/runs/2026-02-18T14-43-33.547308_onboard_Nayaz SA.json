@@ -1,0 +1,321 @@
+{
+  "name": "Nayaz SA",
+  "email": "viky@company.com",
+  "manager_email": "nayazsa2@in.ibm.com",
+  "role": "DevOps",
+  "action": "onboard",
+  "question": "What access is required for the application?",
+  "status": "Process completed",
+  "rag_context_preview": "---\nSOURCE: security.md\n# Security Architecture & Compliance\n\n## Authentication & Authorization\n\n- OAuth 2.0\n- JWT-based session management\n- Role-Based Access Control (RBAC)\n- Principle of least privilege\n\n---\n\n## Data Security\n\n- Encryption at rest\n- TLS encryption in transit\n- PII compliance\n- GDPR aligned\n- SOC 2 aligned\n\n---\n\n## Access Governance\n\nAccess provisioning is:\n\n- Policy-driven\n- Role-based\n- Logged with audit_id\n- Automatically revoked during offboarding\n\n---\n\n## API Security\n\n- Rate limiting\n- Input validation\n- SQL injection prevention\n- XSS protection\n- CORS configuration\n\n---\n\n## Audit Logging\n\nEvery onboarding/offboarding run generates:",
+  "rag_sources": {
+    "primary": [
+      "security.md"
+    ],
+    "related": []
+  },
+  "access": {
+    "action": "provision",
+    "user": "Nayaz SA",
+    "role": "DevOps Engineer",
+    "audit_id": "AUD-B460A5DC63",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Pending (Admin approval required)",
+      "Confluence": "Granted",
+      "Devops Deploy App": "Granted",
+      "Service Now": "Granted",
+      "Outlook": "Granted",
+      "Teams": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "devops"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "DEVOPS"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Pending (Admin approval required)",
+        "details": {
+          "action": "provision",
+          "user": "Nayaz SA",
+          "github_path": "/orgs/AISolutions/memberships/Nayaz SA",
+          "status": 404,
+          "body": {
+            "message": "Not Found",
+            "documentation_url": "https://docs.github.com/enterprise-server@3.17/rest/orgs/members#set-organization-membership-for-a-user",
+            "status": "404"
+          },
+          "resolved_by": "req.user(username)"
+        }
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "DEVOPS",
+            "ENG"
+          ]
+        }
+      },
+      {
+        "system": "Devops Deploy App",
+        "status": "Granted",
+        "details": {
+          "environments": [
+            "staging",
+            "prod"
+          ],
+          "permissions": [
+            "deploy",
+            "rollback"
+          ]
+        }
+      },
+      {
+        "system": "Service Now",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "IT-DevOps"
+          ],
+          "roles": [
+            "itil"
+          ]
+        }
+      },
+      {
+        "system": "Outlook",
+        "status": "Granted",
+        "details": {
+          "mailbox": true,
+          "distribution_lists": [
+            "eng-all@company.com",
+            "devops@company.com"
+          ]
+        }
+      },
+      {
+        "system": "Teams",
+        "status": "Granted",
+        "details": {
+          "teams": [
+            "Engineering",
+            "DevOps"
+          ],
+          "channels": [
+            "announcements",
+            "oncall",
+            "deployments"
+          ]
+        }
+      }
+    ],
+    "verified": false,
+    "notifications": {
+      "sent": false,
+      "slack": null,
+      "email": null
+    }
+  },
+  "notifications": {
+    "error": "Client error '422 Unprocessable Entity' for url 'http://127.0.0.1:9001/tools/notify/onboarding'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422",
+    "slack": null,
+    "email": null
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "What access is required for the application?",
+    "answer": "The provided context does not specify the exact access required for the DevOps role. However, it outlines the general principles for access governance, which include:\n\n*   Policy-driven access\n*   Role-based access control (RBAC)\n*   Principle of least privilege\n\nThis information is found in the `security.md` document. To determine the specific access for the DevOps role, please consult the team lead or the relevant access request documentation.",
+    "sources": [
+      "security.md"
+    ],
+    "sources_detail": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    }
+  },
+  "executive_report": {
+    "employee": "Nayaz SA",
+    "role": "DevOps",
+    "action": "onboard",
+    "timestamp": "2026-02-18T14:43:33.547285Z",
+    "rag_sources": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    },
+    "access": {
+      "action": "provision",
+      "user": "Nayaz SA",
+      "role": "DevOps Engineer",
+      "audit_id": "AUD-B460A5DC63",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Pending (Admin approval required)",
+        "Confluence": "Granted",
+        "Devops Deploy App": "Granted",
+        "Service Now": "Granted",
+        "Outlook": "Granted",
+        "Teams": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "devops"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "DEVOPS"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Pending (Admin approval required)",
+          "details": {
+            "action": "provision",
+            "user": "Nayaz SA",
+            "github_path": "/orgs/AISolutions/memberships/Nayaz SA",
+            "status": 404,
+            "body": {
+              "message": "Not Found",
+              "documentation_url": "https://docs.github.com/enterprise-server@3.17/rest/orgs/members#set-organization-membership-for-a-user",
+              "status": "404"
+            },
+            "resolved_by": "req.user(username)"
+          }
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "DEVOPS",
+              "ENG"
+            ]
+          }
+        },
+        {
+          "system": "Devops Deploy App",
+          "status": "Granted",
+          "details": {
+            "environments": [
+              "staging",
+              "prod"
+            ],
+            "permissions": [
+              "deploy",
+              "rollback"
+            ]
+          }
+        },
+        {
+          "system": "Service Now",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "IT-DevOps"
+            ],
+            "roles": [
+              "itil"
+            ]
+          }
+        },
+        {
+          "system": "Outlook",
+          "status": "Granted",
+          "details": {
+            "mailbox": true,
+            "distribution_lists": [
+              "eng-all@company.com",
+              "devops@company.com"
+            ]
+          }
+        },
+        {
+          "system": "Teams",
+          "status": "Granted",
+          "details": {
+            "teams": [
+              "Engineering",
+              "DevOps"
+            ],
+            "channels": [
+              "announcements",
+              "oncall",
+              "deployments"
+            ]
+          }
+        }
+      ],
+      "verified": false,
+      "notifications": {
+        "sent": false,
+        "slack": null,
+        "email": null
+      }
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "What access is required for the application?",
+      "answer": "The provided context does not specify the exact access required for the DevOps role. However, it outlines the general principles for access governance, which include:\n\n*   Policy-driven access\n*   Role-based access control (RBAC)\n*   Principle of least privilege\n\nThis information is found in the `security.md` document. To determine the specific access for the DevOps role, please consult the team lead or the relevant access request documentation.",
+      "sources": [
+        "security.md"
+      ],
+      "sources_detail": {
+        "primary": [
+          "security.md"
+        ],
+        "related": []
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}

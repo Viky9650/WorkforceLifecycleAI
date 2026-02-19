@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "question": "What access is required for the application?",
+  "answer": "Access for role **Infrastructure Specialist** (from access policy):\n- IAM\n- Jira\n- GitHub\n- Confluence\n- Devops Deploy App\n- Service Now\n- Outlook\n- Teams",
+  "sources": [
+    "config/access_policies.yml"
+  ],
+  "sources_detail": {
+    "primary": [
+      "config/access_policies.yml"
+    ],
+    "related": []
+  }
+}

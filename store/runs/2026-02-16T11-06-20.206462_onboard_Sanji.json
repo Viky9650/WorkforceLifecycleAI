@@ -1,0 +1,332 @@
+{
+  "name": "Sanji",
+  "role": "DevOps",
+  "action": "onboard",
+  "question": "What access is required for the application?",
+  "status": "Process completed",
+  "rag_context_preview": "## Deployment (High level)\n- Deployments flow: local \u2192 staging \u2192 production\n- Use CI/CD pipelines and keep logs/audit trails\n- Validate monitoring and alerts after deploy\n\n## Where to Find Information\n- Architecture doc: services + ownership\n- Security doc: RBAC + least privilege + audit requirements\n- Confluence: runbooks and operational procedures\n\n```\n1. User submits onboarding request\n   \u2193\n2. API validates and forwards to Orchestrator\n   \u2193\n3. Orchestrator routes to Onboarding Agent\n   \u2193\n4. Onboarding Agent:\n   - Generates personalized plan\n   - Creates tasks\n   - Triggers integrations\n   \u2193\n5. Access Control Agent provisions access\n   \u2193\n6. Integration Services:\n   - Create JIRA tickets\n   - Set up GitHub access\n   - Configure Confluence\n   \u2193\n7. Knowledge Agent provides relevant docs\n   ",
+  "rag_sources": {
+    "primary": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ],
+    "related": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ]
+  },
+  "access": {
+    "action": "provision",
+    "user": "Sanji",
+    "role": "DevOps Engineer",
+    "audit_id": "AUD-E735AE68A6",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Granted",
+      "Confluence": "Granted",
+      "Devops Deploy App": "Granted",
+      "Service Now": "Granted",
+      "Outlook": "Granted",
+      "Teams": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "devops"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "DEVOPS"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Granted",
+        "details": {
+          "org": "demo-org",
+          "teams": [
+            "devops-team"
+          ],
+          "repos": [
+            "infra",
+            "platform",
+            "pipelines"
+          ],
+          "permission": "push"
+        }
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "DEVOPS",
+            "ENG"
+          ]
+        }
+      },
+      {
+        "system": "Devops Deploy App",
+        "status": "Granted",
+        "details": {
+          "environments": [
+            "staging",
+            "prod"
+          ],
+          "permissions": [
+            "deploy",
+            "rollback"
+          ]
+        }
+      },
+      {
+        "system": "Service Now",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "IT-DevOps"
+          ],
+          "roles": [
+            "itil"
+          ]
+        }
+      },
+      {
+        "system": "Outlook",
+        "status": "Granted",
+        "details": {
+          "mailbox": true,
+          "distribution_lists": [
+            "eng-all@company.com",
+            "devops@company.com"
+          ]
+        }
+      },
+      {
+        "system": "Teams",
+        "status": "Granted",
+        "details": {
+          "teams": [
+            "Engineering",
+            "DevOps"
+          ],
+          "channels": [
+            "announcements",
+            "oncall",
+            "deployments"
+          ]
+        }
+      }
+    ],
+    "verified": true
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "What access is required for the application?",
+    "answer": "To determine the access required for the application, please refer to the **Security doc**. This document outlines RBAC, least privilege principles, and audit requirements.",
+    "sources": [
+      "architecture.md",
+      "onboarding_guide.md",
+      "security.md"
+    ],
+    "sources_detail": {
+      "primary": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ],
+      "related": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ]
+    }
+  },
+  "executive_report": {
+    "employee": "Sanji",
+    "role": "DevOps",
+    "action": "onboard",
+    "timestamp": "2026-02-16T11:06:20.206456Z",
+    "rag_sources": {
+      "primary": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ],
+      "related": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ]
+    },
+    "access": {
+      "action": "provision",
+      "user": "Sanji",
+      "role": "DevOps Engineer",
+      "audit_id": "AUD-E735AE68A6",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Granted",
+        "Confluence": "Granted",
+        "Devops Deploy App": "Granted",
+        "Service Now": "Granted",
+        "Outlook": "Granted",
+        "Teams": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "devops"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "DEVOPS"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Granted",
+          "details": {
+            "org": "demo-org",
+            "teams": [
+              "devops-team"
+            ],
+            "repos": [
+              "infra",
+              "platform",
+              "pipelines"
+            ],
+            "permission": "push"
+          }
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "DEVOPS",
+              "ENG"
+            ]
+          }
+        },
+        {
+          "system": "Devops Deploy App",
+          "status": "Granted",
+          "details": {
+            "environments": [
+              "staging",
+              "prod"
+            ],
+            "permissions": [
+              "deploy",
+              "rollback"
+            ]
+          }
+        },
+        {
+          "system": "Service Now",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "IT-DevOps"
+            ],
+            "roles": [
+              "itil"
+            ]
+          }
+        },
+        {
+          "system": "Outlook",
+          "status": "Granted",
+          "details": {
+            "mailbox": true,
+            "distribution_lists": [
+              "eng-all@company.com",
+              "devops@company.com"
+            ]
+          }
+        },
+        {
+          "system": "Teams",
+          "status": "Granted",
+          "details": {
+            "teams": [
+              "Engineering",
+              "DevOps"
+            ],
+            "channels": [
+              "announcements",
+              "oncall",
+              "deployments"
+            ]
+          }
+        }
+      ],
+      "verified": true
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "What access is required for the application?",
+      "answer": "To determine the access required for the application, please refer to the **Security doc**. This document outlines RBAC, least privilege principles, and audit requirements.",
+      "sources": [
+        "architecture.md",
+        "onboarding_guide.md",
+        "security.md"
+      ],
+      "sources_detail": {
+        "primary": [
+          "architecture.md",
+          "onboarding_guide.md",
+          "security.md"
+        ],
+        "related": [
+          "architecture.md",
+          "onboarding_guide.md",
+          "security.md"
+        ]
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}
