@@ -260,6 +260,12 @@ npm install
 npm run dev
 ```
 
+### OR — All steps combined with make file
+
+```bash
+make dev
+```
+
 > 🌐 Open **http://localhost:3000**
 
 <br/>
