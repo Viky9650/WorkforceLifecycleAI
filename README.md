@@ -256,8 +256,13 @@ PYTHONPATH=. python -m uvicorn api.main:app --reload --port 9000
 
 ```bash
 cd frontend
-npm install
 npm run dev
+```
+
+### OR — All steps combined with make file
+
+```bash
+make dev
 ```
 
 > 🌐 Open **http://localhost:3000**
