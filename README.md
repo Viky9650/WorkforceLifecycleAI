@@ -29,7 +29,7 @@
 
 | Name | Role |
 |------|------|
-| **Vickey Panjiya** | DevOps / AI Engineer |
+| **Vickey Panjiyar** | DevOps / AI Engineer |
 
 ---
 
@@ -256,7 +256,6 @@ PYTHONPATH=. python -m uvicorn api.main:app --reload --port 9000
 
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
 
@@ -403,6 +402,6 @@ Every lifecycle run generates a structured audit artifact:
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:06b6d4,100:6366f1&height=120&section=footer" width="100%"/>
 
-*Built with ❤️ by Vickey Panjiya*
+*Built with ❤️ by Vickey Panjiyar*
 
 </div>
