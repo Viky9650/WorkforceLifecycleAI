@@ -34,12 +34,14 @@ class ChatRequest(BaseModel):
     role: str = "Employee"
     question: str
 
+
 class OnboardRequest(BaseModel):
     name: str
     email: str = "user@company.com"
     manager_email: str = "manager@company.com"
     role: str
     question: Optional[str] = None
+
 
 class OffboardRequest(BaseModel):
     name: str
@@ -48,6 +50,7 @@ class OffboardRequest(BaseModel):
     role: str
     question: Optional[str] = None
     kt_notes: Optional[str] = None
+
 
 # -----------------------
 # Chat-only endpoint
@@ -69,27 +72,55 @@ def chat(req: ChatRequest) -> Dict[str, Any]:
 
     trace: List[Dict[str, Any]] = []
 
-    # 1) RAG grounding (onboarding_agent does retrieval/preview)
+    # 1) RAG grounding
     try:
         from agents.onboarding_agent import onboarding_agent
         state = onboarding_agent(state)
-        trace.append({"agent": "Onboarding Agent", "status": "ok", "detail": "RAG context retrieved"})
+        trace.append({
+            "agent": "Onboarding Agent",
+            "status": "ok",
+            "detail": "RAG context retrieved",
+        })
     except Exception as e:
-        trace.append({"agent": "Onboarding Agent", "status": "error", "detail": str(e)})
+        print(f"❌ Onboarding Agent Error: {e}")
+        trace.append({
+            "agent": "Onboarding Agent",
+            "status": "error",
+            "detail": str(e),
+        })
 
     # 2) Chat answer
     try:
         from agents.chat_agent import chat_agent
         state = chat_agent(state)
-        trace.append({"agent": "Chat Agent", "status": "ok", "detail": "Answer generated"})
+
+        chat_obj = state.get("chat", {}) or {}
+        if chat_obj.get("error"):
+            trace.append({
+                "agent": "Chat Agent",
+                "status": "error",
+                "detail": chat_obj.get("error"),
+            })
+        else:
+            trace.append({
+                "agent": "Chat Agent",
+                "status": "ok",
+                "detail": "Answer generated",
+            })
+
     except Exception as e:
-        trace.append({"agent": "Chat Agent", "status": "error", "detail": str(e)})
+        print(f"❌ /chat endpoint error while calling chat_agent: {e}")
+        trace.append({
+            "agent": "Chat Agent",
+            "status": "error",
+            "detail": str(e),
+        })
         state["chat"] = {
             "enabled": True,
             "question": req.question,
-            "answer": "(chat error)",
+            "answer": f"(chat error) {str(e)}",
             "error": str(e),
-            "sources": [],
+            "sources": state.get("rag_sources", []),
         }
 
     return {
@@ -104,6 +135,7 @@ def chat(req: ChatRequest) -> Dict[str, Any]:
         "chat": state.get("chat"),
         "trace": trace,
     }
+
 
 # -----------------------
 # Lifecycle endpoints
@@ -122,6 +154,7 @@ def onboard(req: OnboardRequest):
         }
     )
 
+
 @app.post("/offboard")
 def offboard(req: OffboardRequest):
     return graph.invoke(
@@ -137,16 +170,17 @@ def offboard(req: OffboardRequest):
         }
     )
 
+
 # -----------------------
 # Run loader endpoint
 # -----------------------
 RUNS_DIR = Path("store/runs").resolve()
 
+
 @app.get("/run")
 def get_run(path: str = Query(..., description="Run filename or path returned by /runs")):
     requested = Path(path)
 
-    # If UI passes only filename, assume it lives under store/runs/
     if requested.parent == Path("."):
         requested = (RUNS_DIR / requested.name).resolve()
     else:
@@ -155,7 +189,6 @@ def get_run(path: str = Query(..., description="Run filename or path returned by
         else:
             requested = requested.resolve()
 
-    # Security: must be inside RUNS_DIR
     if RUNS_DIR not in requested.parents:
         raise HTTPException(status_code=400, detail="Invalid path")
 

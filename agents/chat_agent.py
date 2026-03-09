@@ -1,4 +1,3 @@
-# agents/chat_agent.py
 """
 Chat Agent (Gemini + RAG + Policy-as-truth)
 
@@ -16,16 +15,19 @@ from typing import Any, Dict, List, Tuple, Optional
 
 import yaml
 from dotenv import load_dotenv
-
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-POLICY_PATH = os.getenv("ACCESS_POLICY_PATH", str(BASE_DIR / "config" / "access_policies.yml"))
+POLICY_PATH = os.getenv(
+    "ACCESS_POLICY_PATH",
+    str(BASE_DIR / "config" / "access_policies.yml"),
+)
 
-GEMINI_CHAT_MODEL = os.getenv("GEMINI_CHAT_MODEL", "gemini-2.5-flash-lite")
+# Fully env-driven
+GEMINI_CHAT_MODEL = os.getenv("GEMINI_CHAT_MODEL")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 
 
@@ -43,26 +45,29 @@ ROLE_ALIASES = {
     "architect": "Architect",
 }
 
+
 def _load_policies() -> Dict[str, Any]:
     try:
         with open(POLICY_PATH, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
         return data if isinstance(data, dict) else {}
-    except Exception:
+    except Exception as e:
+        print(f"❌ Failed to load access policies: {e}")
         return {}
+
 
 def list_available_roles() -> List[str]:
     pol = _load_policies()
     roles = [k for k in pol.keys() if isinstance(k, str)]
     return sorted(roles)
 
+
 def _normalize_role(role: str) -> str:
-    r = (role or "").strip()
-    if not r:
+    role = (role or "").strip()
+    if not role:
         return ""
-    # normalize via aliases (case-insensitive)
-    key = r.lower().strip()
-    return ROLE_ALIASES.get(key, r)
+    return ROLE_ALIASES.get(role.lower(), role)
+
 
 def systems_for_role(role: str) -> List[str]:
     pol = _load_policies()
@@ -74,24 +79,21 @@ def systems_for_role(role: str) -> List[str]:
             return [str(s) for s in systems]
     return []
 
-def _extract_role_from_question(q: str) -> Optional[str]:
-    ql = (q or "").lower()
 
-    # detect known role keywords in the question
+def _extract_role_from_question(question: str) -> Optional[str]:
+    question = question or ""
+    ql = question.lower()
+
     for key, canonical in ROLE_ALIASES.items():
-        # match whole words for short keys like "sre", "infra"
         if re.search(rf"\b{re.escape(key)}\b", ql):
             return canonical
 
-    # Also allow explicit “for <Role Name>”
-    m = re.search(r"for\s+([A-Za-z ]+)", q)
-    if m:
-        candidate = m.group(1).strip()
-        # if candidate matches an existing policy role (case-sensitive keys), map it
-        pol = _load_policies()
-        if candidate in pol:
+    match = re.search(r"for\s+([A-Za-z ]+)", question)
+    if match:
+        candidate = match.group(1).strip()
+        policies = _load_policies()
+        if candidate in policies:
             return candidate
-        # try alias normalization
         return _normalize_role(candidate)
 
     return None
@@ -102,9 +104,9 @@ def _extract_role_from_question(q: str) -> Optional[str]:
 # -----------------------------
 def _get_rag_from_state(state: Dict[str, Any]) -> Tuple[str, Dict[str, List[str]]]:
     """
-    Supports your state format:
+    Supports:
       state["rag_context_preview"]
-      state["rag_sources"] = {"primary":[...], "related":[...]}   (or)
+      state["rag_sources"] = {"primary":[...], "related":[...]}
       state["rag_sources"] = {"primary_sources":[...], "related_sources":[...]}
     """
     context = state.get("rag_context_preview") or ""
@@ -116,31 +118,40 @@ def _get_rag_from_state(state: Dict[str, Any]) -> Tuple[str, Dict[str, List[str]
     primary = sources.get("primary") or sources.get("primary_sources") or []
     related = sources.get("related") or sources.get("related_sources") or []
 
-    if not isinstance(primary, list): primary = []
-    if not isinstance(related, list): related = []
+    if not isinstance(primary, list):
+        primary = []
+    if not isinstance(related, list):
+        related = []
 
     return str(context), {"primary": list(primary), "related": list(related)}
 
+
 def _fallback_retrieve(question: str, k: int = 6) -> Tuple[str, Dict[str, List[str]]]:
     """
-    Supports your rag.retriever.py return format:
+    Supports rag.retriever.retrieve_context() return format:
       {
         "context": "...",
         "primary_sources": [...],
         "related_sources": [...],
       }
     """
-    from rag.retriever import retrieve_context  # local import
+    from rag.retriever import retrieve_context
+
     out = retrieve_context(question, k=k)
 
-    ctx = out.get("context", "") if isinstance(out, dict) else ""
-    primary = out.get("primary_sources", []) if isinstance(out, dict) else []
-    related = out.get("related_sources", []) if isinstance(out, dict) else []
+    if not isinstance(out, dict):
+        return "", {"primary": [], "related": []}
 
-    if not isinstance(primary, list): primary = []
-    if not isinstance(related, list): related = []
+    context = str(out.get("context", "") or "")
+    primary = out.get("primary_sources", []) or []
+    related = out.get("related_sources", []) or []
 
-    return str(ctx), {"primary": list(primary), "related": list(related)}
+    if not isinstance(primary, list):
+        primary = []
+    if not isinstance(related, list):
+        related = []
+
+    return context, {"primary": list(primary), "related": list(related)}
 
 
 # -----------------------------
@@ -166,70 +177,108 @@ def chat_agent(state: Dict[str, Any]) -> Dict[str, Any]:
     # -----------------------------
     # POLICY = source of truth
     # -----------------------------
-    if any(p in ql for p in ["what roles are available", "available roles", "list roles", "roles available"]):
+    if any(
+        phrase in ql
+        for phrase in [
+            "what roles are available",
+            "available roles",
+            "list roles",
+            "roles available",
+        ]
+    ):
         roles = list_available_roles()
         state["chat"] = {
             "enabled": True,
             "question": question,
-            "answer": "Available employee roles (from access policy):\n- " + "\n- ".join(roles) if roles else
-                      "No roles found. Check config/access_policies.yml",
+            "answer": (
+                "Available employee roles (from access policy):\n- " + "\n- ".join(roles)
+                if roles
+                else "No roles found. Check config/access_policies.yml"
+            ),
             "sources": ["config/access_policies.yml"],
-            "sources_detail": {"primary": ["config/access_policies.yml"], "related": []},
+            "sources_detail": {
+                "primary": ["config/access_policies.yml"],
+                "related": [],
+            },
         }
         return state
 
-    if any(p in ql for p in ["what access is required", "required access", "what systems do i need", "what permissions"]):
-        # Try to extract role from question first
-        role_in_q = _extract_role_from_question(question)
-        role = role_in_q or _normalize_role(state_role)
+    if any(
+        phrase in ql
+        for phrase in [
+            "what access is required",
+            "required access",
+            "what systems do i need",
+            "what permissions",
+        ]
+    ):
+        role_in_question = _extract_role_from_question(question)
+        resolved_role = role_in_question or _normalize_role(state_role)
 
-        systems = systems_for_role(role)
+        systems = systems_for_role(resolved_role)
         if systems:
             state["chat"] = {
                 "enabled": True,
                 "question": question,
-                "answer": f"Access for role **{role}** (from access policy):\n- " + "\n- ".join(systems),
+                "answer": (
+                    f"Access for role **{resolved_role}** (from access policy):\n- "
+                    + "\n- ".join(systems)
+                ),
                 "sources": ["config/access_policies.yml"],
-                "sources_detail": {"primary": ["config/access_policies.yml"], "related": []},
+                "sources_detail": {
+                    "primary": ["config/access_policies.yml"],
+                    "related": [],
+                },
             }
             return state
-        # If policy does not contain role, we continue to RAG answer (best effort)
 
     # -----------------------------
     # RAG knowledge answer
     # -----------------------------
     context_text, sources_detail = _get_rag_from_state(state)
 
-    # If onboarding_agent didn't populate context, retrieve now
     if not context_text.strip():
-        context_text, sources_detail = _fallback_retrieve(question, k=6)
+        context_text, sources_detail = _fallback_retrieve(question, k=3)
 
     primary = sources_detail.get("primary", []) or []
     related = sources_detail.get("related", []) or []
     flat_sources = list(dict.fromkeys(primary + related))
 
-    # If still empty context, give a basic helpful answer
+    # -----------------------------
+    # Performance optimization:
+    # limit context size before sending to Gemini
+    # -----------------------------
+    MAX_CONTEXT_CHARS = int(os.getenv("MAX_CONTEXT_CHARS", "2500"))
+    context_text = context_text[:MAX_CONTEXT_CHARS]
+
     if not context_text.strip():
-        fallback = (
-            "I don’t have enough internal context loaded to answer that precisely.\n\n"
-            "Try:\n"
-            "- Ask HR where the onboarding guide lives (often Confluence / HR portal)\n"
-            "- If you have Confluence: search for “Employee Onboarding (Day 0–30)”\n"
-            "- Or run `python -m rag.ingest` to rebuild the index after updating docs\n"
-        )
         state["chat"] = {
             "enabled": True,
             "question": question,
-            "answer": fallback,
+            "answer": (
+                "I don’t have enough internal context loaded to answer that precisely.\n\n"
+                "Try:\n"
+                "- Ask HR where the onboarding guide lives\n"
+                "- Search your internal docs for the topic\n"
+                "- Run `python -m rag.ingest` after updating docs\n"
+            ),
             "sources": flat_sources,
             "sources_detail": {"primary": primary, "related": related},
         }
         return state
 
+    # -----------------------------
     # Gemini call
+    # -----------------------------
     try:
         if not GOOGLE_API_KEY:
             raise RuntimeError("Missing GOOGLE_API_KEY (or GEMINI_API_KEY). Set it in .env")
+
+        if not GEMINI_CHAT_MODEL:
+            raise RuntimeError("Missing GEMINI_CHAT_MODEL. Set it in .env")
+
+        print(f"🤖 Chat Agent: calling Gemini model={GEMINI_CHAT_MODEL}")
+        print(f"📏 Chat Agent: context length={len(context_text)} chars")
 
         llm = ChatGoogleGenerativeAI(
             model=GEMINI_CHAT_MODEL,
@@ -237,17 +286,17 @@ def chat_agent(state: Dict[str, Any]) -> Dict[str, Any]:
             temperature=float(os.getenv("CHAT_TEMPERATURE", "0.2")),
         )
 
-        sys = SystemMessage(
+        system_message = SystemMessage(
             content=(
                 "You are an internal onboarding/offboarding assistant.\n"
                 "Use the provided internal context as your primary source.\n"
                 "If the answer exists in the context, answer confidently and cite the relevant source name(s).\n"
-                "If not present, say what is missing and suggest where to find it.\n"
-                "Keep answers concise and practical."
+                "If the answer is not present, clearly say what is missing and suggest where to find it.\n"
+                "Keep answers concise, practical, and grounded."
             )
         )
 
-        user = HumanMessage(
+        user_message = HumanMessage(
             content=(
                 f"Employee: {name}\n"
                 f"Role: {state_role}\n\n"
@@ -256,8 +305,10 @@ def chat_agent(state: Dict[str, Any]) -> Dict[str, Any]:
             )
         )
 
-        resp = llm.invoke([sys, user])
+        resp = llm.invoke([system_message, user_message])
         answer = getattr(resp, "content", str(resp)).strip()
+
+        print("✅ Chat Agent: Gemini response received")
 
         state["chat"] = {
             "enabled": True,
@@ -268,10 +319,14 @@ def chat_agent(state: Dict[str, Any]) -> Dict[str, Any]:
         }
 
     except Exception as e:
+        print(f"❌ Chat Agent Error: {e}")
+
+        fallback_answer = context_text[:600]
+
         state["chat"] = {
             "enabled": True,
             "question": question,
-            "answer": "(chat error)",
+            "answer": f"(LLM unavailable — showing retrieved context)\n\n{fallback_answer}",
             "error": str(e),
             "sources": flat_sources,
             "sources_detail": {"primary": primary, "related": related},

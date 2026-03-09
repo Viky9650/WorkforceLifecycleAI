@@ -64,7 +64,7 @@ def onboarding_agent(state: Dict[str, Any]) -> Dict[str, Any]:
         #   "bias_file": "...",
         #   "k": ...
         # }
-        out = retrieve_context(query, k=6)
+        out = retrieve_context(query, k=3)
 
         context = (out.get("context") or "").strip()
 

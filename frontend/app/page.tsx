@@ -5,8 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 type TraceItem = { agent: string; status: "ok" | "error" | string; detail?: string };
 type ApiResp = any;
 
-// ✅ Default to 9000 (your backend port). Still override with NEXT_PUBLIC_API_BASE.
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:9000";
+// Route through Next.js so auth cookies are included automatically.
+// Next.js rewrites /api/* → http://127.0.0.1:9000/* (configure in next.config.ts)
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "/api";
 
 function cx(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
@@ -287,25 +288,27 @@ export default function Page() {
 
             <div className="flex items-center gap-2">
               <Pill tone="primary">Runs: {runs.length}</Pill>
-              <div className="inline-flex rounded-2xl border border-slate-200 bg-white/70 p-1">
+
+              <div className="inline-flex rounded-2xl border border-slate-200 bg-white/70 p-1 shadow-sm">
                 <button
                   onClick={() => setMode("assistant")}
                   className={cx(
-                    "rounded-xl px-3 py-2 text-sm font-medium transition",
+                    "rounded-xl px-4 py-2 text-sm font-semibold transition-all",
                     mode === "assistant"
-                      ? "bg-white shadow-sm border border-slate-200 text-slate-900"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-gradient-to-r from-cyan-500 to-sky-500 text-white shadow-md"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   )}
                 >
                   Assistant
                 </button>
+
                 <button
                   onClick={() => setMode("lifecycle")}
                   className={cx(
-                    "rounded-xl px-3 py-2 text-sm font-medium transition",
+                    "rounded-xl px-4 py-2 text-sm font-semibold transition-all",
                     mode === "lifecycle"
-                      ? "bg-white shadow-sm border border-slate-200 text-slate-900"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   )}
                 >
                   Lifecycle
@@ -425,7 +428,17 @@ export default function Page() {
             <Card
               title={mode === "assistant" ? "AI Chat" : "Lifecycle Notes"}
               subtitle={mode === "assistant" ? "Calm UI • fast answers • safe policy rules" : "Runs multi-agent orchestration + tools + audit"}
-              right={mode === "assistant" ? <Pill tone="primary">Chat</Pill> : <Pill tone="danger">Run</Pill>}
+              right={
+                mode === "assistant" ? (
+                  <span className="inline-flex items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-700">
+                    Assistant
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center rounded-full border border-fuchsia-200 bg-fuchsia-50 px-2.5 py-1 text-xs font-medium text-fuchsia-700">
+                    Lifecycle
+                  </span>
+                )
+              }
             >
               {mode === "assistant" ? (
                 <div className="flex flex-col gap-3">
@@ -459,7 +472,7 @@ export default function Page() {
                       })}
                       {chatLoading ? (
                         <div className="flex justify-start">
-                          <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
+                          <div className="rounded-2xl border border-cyan-200 bg-cyan-50 px-3 py-2 text-sm text-cyan-700">
                             Thinking…
                           </div>
                         </div>
@@ -469,7 +482,7 @@ export default function Page() {
 
                   <div className="flex gap-2">
                     <input
-                      className="flex-1 rounded-xl border border-slate-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="flex-1 rounded-xl border border-slate-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="Ask a question…"
                       value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
@@ -487,7 +500,7 @@ export default function Page() {
                   <div>
                     <div className="mb-1 text-xs font-medium text-slate-700">Question / Notes</div>
                     <textarea
-                      className="w-full min-h-[220px] rounded-xl border border-slate-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="w-full min-h-[220px] rounded-xl border border-slate-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
                     />

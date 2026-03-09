@@ -1,0 +1,241 @@
+{
+  "name": "Viky",
+  "email": "viky@company.com",
+  "manager_email": "manager@company.com",
+  "role": "SRE",
+  "action": "onboard",
+  "question": "What access is required for the application?",
+  "status": "Process completed",
+  "rag_context_preview": "---\nSOURCE: security.md\n# Security Architecture & Compliance\n\n## Authentication & Authorization\n\n- OAuth 2.0\n- JWT-based session management\n- Role-Based Access Control (RBAC)\n- Principle of least privilege\n\n---\n\n## Data Security\n\n- Encryption at rest\n- TLS encryption in transit\n- PII compliance\n- GDPR aligned\n- SOC 2 aligned\n\n---\n\n## Access Governance\n\nAccess provisioning is:\n\n- Policy-driven\n- Role-based\n- Logged with audit_id\n- Automatically revoked during offboarding\n\n---\n\n## API Security\n\n- Rate limiting\n- Input validation\n- SQL injection prevention\n- XSS protection\n- CORS configuration\n\n---\n\n## Audit Logging\n\nEvery onboarding/offboarding run generates:",
+  "rag_sources": {
+    "primary": [
+      "security.md"
+    ],
+    "related": []
+  },
+  "access": {
+    "action": "provision",
+    "user": "Viky",
+    "role": "SRE",
+    "audit_id": "AUD-414A64059F",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Failed",
+      "Confluence": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "sre"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "SRE"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Failed",
+        "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "SRE",
+            "ENG"
+          ]
+        }
+      }
+    ],
+    "verified": false,
+    "notifications": {
+      "sent": true,
+      "slack": {
+        "status": "sent",
+        "channel": "#hr-onboarding",
+        "message_id": "SLK-F717F7EA14",
+        "timestamp": "2026-03-06T16:59:38.237702+00:00"
+      },
+      "email": {
+        "status": "sent",
+        "to": [
+          "employee@company.com",
+          "hr@company.com",
+          "it-support@company.com"
+        ],
+        "subject": "Welcome! Your onboarding is complete \u2705",
+        "message_id": "EML-92CEFAB463",
+        "timestamp": "2026-03-06T16:59:38.237684+00:00"
+      }
+    }
+  },
+  "notifications": {
+    "slack": {
+      "provider": "slack",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "SLK-F717F7EA14",
+      "timestamp": "2026-03-06T16:59:38.237702+00:00",
+      "channel": "#hr-onboarding",
+      "text_preview": "Onboarding completed \u2705 (audit attached)",
+      "meta": {}
+    },
+    "email": {
+      "provider": "email",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "EML-92CEFAB463",
+      "timestamp": "2026-03-06T16:59:38.237684+00:00",
+      "to": [
+        "employee@company.com",
+        "hr@company.com",
+        "it-support@company.com"
+      ],
+      "subject": "Welcome! Your onboarding is complete \u2705",
+      "body_preview": "Welcome aboard! Your access has been provisioned.",
+      "meta": {}
+    }
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "What access is required for the application?",
+    "answer": "(chat error)",
+    "error": "Error calling model 'gemini-2.5-flash-lite' (PERMISSION_DENIED): 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+    "sources": [
+      "security.md"
+    ],
+    "sources_detail": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    }
+  },
+  "executive_report": {
+    "employee": "Viky",
+    "role": "SRE",
+    "action": "onboard",
+    "timestamp": "2026-03-06T16:59:38.406806Z",
+    "rag_sources": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    },
+    "access": {
+      "action": "provision",
+      "user": "Viky",
+      "role": "SRE",
+      "audit_id": "AUD-414A64059F",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Failed",
+        "Confluence": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "sre"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "SRE"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Failed",
+          "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "SRE",
+              "ENG"
+            ]
+          }
+        }
+      ],
+      "verified": false,
+      "notifications": {
+        "sent": true,
+        "slack": {
+          "status": "sent",
+          "channel": "#hr-onboarding",
+          "message_id": "SLK-F717F7EA14",
+          "timestamp": "2026-03-06T16:59:38.237702+00:00"
+        },
+        "email": {
+          "status": "sent",
+          "to": [
+            "employee@company.com",
+            "hr@company.com",
+            "it-support@company.com"
+          ],
+          "subject": "Welcome! Your onboarding is complete \u2705",
+          "message_id": "EML-92CEFAB463",
+          "timestamp": "2026-03-06T16:59:38.237684+00:00"
+        }
+      }
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "What access is required for the application?",
+      "answer": "(chat error)",
+      "error": "Error calling model 'gemini-2.5-flash-lite' (PERMISSION_DENIED): 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "sources": [
+        "security.md"
+      ],
+      "sources_detail": {
+        "primary": [
+          "security.md"
+        ],
+        "related": []
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}

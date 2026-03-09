@@ -1,0 +1,241 @@
+{
+  "name": "Viky",
+  "email": "viky@company.com",
+  "manager_email": "manager@company.com",
+  "role": "SRE",
+  "action": "onboard",
+  "question": "What access is required for the application?",
+  "status": "Process completed",
+  "rag_context_preview": "---\nSOURCE: security.md\n# Security Architecture & Compliance\n\n## Authentication & Authorization\n\n- OAuth 2.0\n- JWT-based session management\n- Role-Based Access Control (RBAC)\n- Principle of least privilege\n\n---\n\n## Data Security\n\n- Encryption at rest\n- TLS encryption in transit\n- PII compliance\n- GDPR aligned\n- SOC 2 aligned\n\n---\n\n## Access Governance\n\nAccess provisioning is:\n\n- Policy-driven\n- Role-based\n- Logged with audit_id\n- Automatically revoked during offboarding\n\n---\n\n## API Security\n\n- Rate limiting\n- Input validation\n- SQL injection prevention\n- XSS protection\n- CORS configuration\n\n---\n\n## Audit Logging\n\nEvery onboarding/offboarding run generates:",
+  "rag_sources": {
+    "primary": [
+      "security.md"
+    ],
+    "related": []
+  },
+  "access": {
+    "action": "provision",
+    "user": "Viky",
+    "role": "SRE",
+    "audit_id": "AUD-3BF901F8B8",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Failed",
+      "Confluence": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "sre"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "SRE"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Failed",
+        "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "SRE",
+            "ENG"
+          ]
+        }
+      }
+    ],
+    "verified": false,
+    "notifications": {
+      "sent": true,
+      "slack": {
+        "status": "sent",
+        "channel": "#hr-onboarding",
+        "message_id": "SLK-04B49FEC49",
+        "timestamp": "2026-03-09T12:02:40.710006+00:00"
+      },
+      "email": {
+        "status": "sent",
+        "to": [
+          "employee@company.com",
+          "hr@company.com",
+          "it-support@company.com"
+        ],
+        "subject": "Welcome! Your onboarding is complete \u2705",
+        "message_id": "EML-5C3092CD8E",
+        "timestamp": "2026-03-09T12:02:40.709994+00:00"
+      }
+    }
+  },
+  "notifications": {
+    "slack": {
+      "provider": "slack",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "SLK-04B49FEC49",
+      "timestamp": "2026-03-09T12:02:40.710006+00:00",
+      "channel": "#hr-onboarding",
+      "text_preview": "Onboarding completed \u2705 (audit attached)",
+      "meta": {}
+    },
+    "email": {
+      "provider": "email",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "EML-5C3092CD8E",
+      "timestamp": "2026-03-09T12:02:40.709994+00:00",
+      "to": [
+        "employee@company.com",
+        "hr@company.com",
+        "it-support@company.com"
+      ],
+      "subject": "Welcome! Your onboarding is complete \u2705",
+      "body_preview": "Welcome aboard! Your access has been provisioned.",
+      "meta": {}
+    }
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "What access is required for the application?",
+    "answer": "(LLM unavailable \u2014 showing retrieved context)\n\n---\nSOURCE: security.md\n# Security Architecture & Compliance\n\n## Authentication & Authorization\n\n- OAuth 2.0\n- JWT-based session management\n- Role-Based Access Control (RBAC)\n- Principle of least privilege\n\n---\n\n## Data Security\n\n- Encryption at rest\n- TLS encryption in transit\n- PII compliance\n- GDPR aligned\n- SOC 2 aligned\n\n---\n\n## Access Governance\n\nAccess provisioning is:\n\n- Policy-driven\n- Role-based\n- Logged with audit_id\n- Automatically revoked during offboarding\n\n---\n\n## API Security\n\n- Rate limiting\n- Input validation\n- SQL injection prevention\n- XSS protection\n- CORS configuration\n\n-",
+    "error": "Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\\nPlease retry in 45.363081001s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}",
+    "sources": [
+      "security.md"
+    ],
+    "sources_detail": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    }
+  },
+  "executive_report": {
+    "employee": "Viky",
+    "role": "SRE",
+    "action": "onboard",
+    "timestamp": "2026-03-09T12:03:14.643062Z",
+    "rag_sources": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    },
+    "access": {
+      "action": "provision",
+      "user": "Viky",
+      "role": "SRE",
+      "audit_id": "AUD-3BF901F8B8",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Failed",
+        "Confluence": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "sre"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "SRE"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Failed",
+          "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "SRE",
+              "ENG"
+            ]
+          }
+        }
+      ],
+      "verified": false,
+      "notifications": {
+        "sent": true,
+        "slack": {
+          "status": "sent",
+          "channel": "#hr-onboarding",
+          "message_id": "SLK-04B49FEC49",
+          "timestamp": "2026-03-09T12:02:40.710006+00:00"
+        },
+        "email": {
+          "status": "sent",
+          "to": [
+            "employee@company.com",
+            "hr@company.com",
+            "it-support@company.com"
+          ],
+          "subject": "Welcome! Your onboarding is complete \u2705",
+          "message_id": "EML-5C3092CD8E",
+          "timestamp": "2026-03-09T12:02:40.709994+00:00"
+        }
+      }
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "What access is required for the application?",
+      "answer": "(LLM unavailable \u2014 showing retrieved context)\n\n---\nSOURCE: security.md\n# Security Architecture & Compliance\n\n## Authentication & Authorization\n\n- OAuth 2.0\n- JWT-based session management\n- Role-Based Access Control (RBAC)\n- Principle of least privilege\n\n---\n\n## Data Security\n\n- Encryption at rest\n- TLS encryption in transit\n- PII compliance\n- GDPR aligned\n- SOC 2 aligned\n\n---\n\n## Access Governance\n\nAccess provisioning is:\n\n- Policy-driven\n- Role-based\n- Logged with audit_id\n- Automatically revoked during offboarding\n\n---\n\n## API Security\n\n- Rate limiting\n- Input validation\n- SQL injection prevention\n- XSS protection\n- CORS configuration\n\n-",
+      "error": "Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\\nPlease retry in 45.363081001s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}",
+      "sources": [
+        "security.md"
+      ],
+      "sources_detail": {
+        "primary": [
+          "security.md"
+        ],
+        "related": []
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}
