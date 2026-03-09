@@ -222,6 +222,9 @@ Create a `.env` file in the project root:
 ```env
 # Gemini
 GOOGLE_API_KEY=your_gemini_api_key
+GEMINI_CHAT_MODEL=gemini-2.0-flash
+CHAT_TEMPERATURE=0.2
+MAX_CONTEXT_CHARS=2500
 
 # MCP Server
 MCP_BASE_URL=http://127.0.0.1:9001
