@@ -106,6 +106,92 @@
 
 ---
 
+## 🔐 Face Authentication (Login Gate)
+
+WorkforceLifecycleAI uses an **on-device biometric login** powered by MediaPipe — no face data ever leaves the browser.
+
+<table>
+<tr>
+<td width="50%" align="center">
+
+### 🤖 How It Works
+✅ Opens webcam in the browser  
+✅ Detects face using MediaPipe FaceMesh (468 landmarks)  
+✅ Tracks hand using MediaPipe Hands (21 landmarks)  
+✅ Requires 👍 thumbs-up gesture held for ~18 frames  
+✅ Sets a session cookie `face_auth=granted`  
+✅ Middleware gates all routes until authenticated  
+
+</td>
+<td width="50%" align="center">
+
+### 🛡️ Privacy & Security
+✅ 100% on-device — zero data transmitted  
+✅ Camera LED turns off immediately after auth  
+✅ Session cookie expires after 1 hour  
+✅ All pages protected by Next.js middleware  
+✅ No face images stored anywhere  
+✅ Works entirely in the browser (no backend call)  
+
+</td>
+</tr>
+</table>
+
+### 🔷 Face Auth Flow
+
+```
+User visits any page
+      │
+      ▼
+Next.js Middleware checks face_auth cookie
+      │
+      ├─ Not authenticated → redirect to /login
+      │
+      ▼
+FaceAuthAgent boots (MediaPipe loads on-device)
+      │
+      ▼
+Webcam opens → Face detected (468 landmarks)
+      │
+      ▼
+Thumbs-up gesture held for 18 consecutive frames
+      │
+      ▼
+Cookie set: face_auth=granted (1hr expiry)
+      │
+      ▼
+Camera LED off → Redirect to dashboard ✅
+```
+
+### Agent States
+
+| State | Description |
+|-------|-------------|
+| `BOOTING` | Agent initialising |
+| `REQUESTING_CAM` | Asking browser for camera permission |
+| `LOADING_MODELS` | Downloading MediaPipe models |
+| `SCANNING_FACE` | Looking for a face in the video feed |
+| `FACE_LOCKED` | Face found — waiting for 👍 gesture |
+| `GESTURE_DETECTED` | Thumbs-up seen — counting confirmation frames |
+| `AUTHENTICATED` | Auth passed, cookie set |
+| `REDIRECTING` | Camera off, navigating to dashboard |
+
+### Frontend Dependencies (Face Auth)
+
+Add these to `frontend/package.json`:
+
+```json
+"@mediapipe/face_mesh": "^0.4.1633559619",
+"@mediapipe/hands": "^0.4.1646424915",
+"@mediapipe/camera_utils": "^0.3.1640029074"
+```
+
+> Models are loaded from the jsDelivr CDN at runtime — no local model files needed.
+
+<br/>
+
+---
+
 ## 🧠 Architecture
 
 ### 🔷 Lifecycle Execution Flow
@@ -265,6 +351,7 @@ npm run dev
 ### OR — All steps combined with make file
 
 ```bash
+make help
 make dev
 ```
 

@@ -429,7 +429,12 @@ export default function FaceAuthAgent() {
 
         {/* Logo + state badge */}
         <div style={s.header}>
-          <div style={s.logo}>Face<span style={{ color: '#c8e8f0' }}>Agent</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <div style={{ fontFamily: 'monospace', fontSize: 16, color: '#2a5060', letterSpacing: 2 }}>
+              Workforce<span style={{ color: '#00e5ff' }}>Lifecycle</span>AI
+            </div>
+            <div style={s.logo}>Face<span style={{ color: '#c8e8f0' }}>Agent</span></div>
+          </div>
           <AgentStateBadge state={agentState} />
         </div>
 
