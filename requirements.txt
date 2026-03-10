@@ -57,3 +57,6 @@ torch
 
 # File watching
 watchfiles
+
+
+sqlalchemy>=2.0.0

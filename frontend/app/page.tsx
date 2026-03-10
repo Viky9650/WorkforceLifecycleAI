@@ -5,9 +5,48 @@ import { useEffect, useMemo, useState } from "react";
 type TraceItem = { agent: string; status: "ok" | "error" | string; detail?: string };
 type ApiResp = any;
 
-// Route through Next.js so auth cookies are included automatically.
-// Next.js rewrites /api/* → http://127.0.0.1:9000/* (configure in next.config.ts)
+type CurrentUser = {
+  name: string;
+  email: string;
+  role: "employee" | "hr" | "admin";
+};
+
+type DashboardEmployee = {
+  id: number;
+  name: string;
+  email: string;
+  manager_email: string;
+  role: string;
+  department?: string | null;
+  employment_status: "active" | "inactive";
+  lifecycle_status: "onboarded" | "offboarded";
+  created_at: string;
+  updated_at: string;
+  access: Record<string, string>;
+  access_summary?: {
+    total: number;
+    granted: number;
+    revoked: number;
+  };
+};
+
+type DashboardResp = {
+  summary?: {
+    total: number;
+    active: number;
+    inactive: number;
+  };
+  pagination?: {
+    page: number;
+    page_size: number;
+    total_filtered: number;
+    total_pages: number;
+  };
+  employees?: DashboardEmployee[];
+};
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "/api";
+const DEV_USER_EMAIL = "hr@company.com";
 
 function cx(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
@@ -127,6 +166,10 @@ function prettyRunLabel(runPath: string) {
 export default function Page() {
   const [mode, setMode] = useState<"assistant" | "lifecycle">("assistant");
 
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardResp | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(false);
+
   const [name, setName] = useState("Viky");
   const [email, setEmail] = useState("viky@company.com");
   const [managerEmail, setManagerEmail] = useState("manager@company.com");
@@ -134,7 +177,6 @@ export default function Page() {
 
   const [question, setQuestion] = useState("What access is required for the application?");
 
-  // ✅ Separate loading states
   const [onboardLoading, setOnboardLoading] = useState(false);
   const [offboardLoading, setOffboardLoading] = useState(false);
 
@@ -147,6 +189,15 @@ export default function Page() {
   const [runLoading, setRunLoading] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [roleOptions, setRoleOptions] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  const [selectedEmployee, setSelectedEmployee] = useState<DashboardEmployee | null>(null);
 
   const [chatMsgs, setChatMsgs] = useState<
     { who: "user" | "assistant" | "event"; text: string; meta?: any }[]
@@ -161,9 +212,70 @@ export default function Page() {
     } catch {}
   }
 
+  async function loadMe() {
+    try {
+      const r = await fetch(`${API_BASE}/me`, {
+        headers: {
+          "x-user-email": DEV_USER_EMAIL,
+        },
+      });
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      setCurrentUser(data);
+    } catch (e) {
+      console.error("Failed to load current user", e);
+    }
+  }
+
+  async function loadRoles() {
+    try {
+      const r = await fetch(`${API_BASE}/employees/roles`);
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      setRoleOptions(data?.roles || []);
+    } catch (e) {
+      console.error("Failed to load roles", e);
+    }
+  }
+
+  async function loadDashboard() {
+    setDashboardLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: String(page),
+        page_size: String(pageSize),
+      });
+
+      if (searchTerm.trim()) params.set("search", searchTerm.trim());
+      if (statusFilter !== "all") params.set("status", statusFilter);
+      if (roleFilter !== "all") params.set("role", roleFilter);
+
+      const r = await fetch(`${API_BASE}/employees/dashboard?${params.toString()}`);
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      setDashboard(data);
+    } catch (e) {
+      console.error("Failed to load dashboard", e);
+    } finally {
+      setDashboardLoading(false);
+    }
+  }
+
   useEffect(() => {
     refreshRuns();
+    loadMe();
+    loadRoles();
   }, []);
+
+  useEffect(() => {
+    loadDashboard();
+  }, [page, pageSize, searchTerm, statusFilter, roleFilter]);
+
+  useEffect(() => {
+    if (currentUser?.role === "employee" && mode === "lifecycle") {
+      setMode("assistant");
+    }
+  }, [currentUser, mode]);
 
   async function loadRun(runPath: string) {
     setRunLoading(true);
@@ -214,7 +326,10 @@ export default function Page() {
 
       const r = await fetch(`${API_BASE}${endpoint}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-email": currentUser?.email || DEV_USER_EMAIL,
+        },
         body: JSON.stringify(payload),
       });
 
@@ -223,6 +338,7 @@ export default function Page() {
       const data = await r.json();
       setResp(data);
       await refreshRuns();
+      await loadDashboard();
 
       setChatMsgs((m) => [
         ...m,
@@ -276,7 +392,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-sky-50">
       <div className="border-b border-slate-200/70 bg-white/70 backdrop-blur">
-        <div className="mx-auto max-w-6xl px-4 py-4">
+        <div className="mx-auto max-w-7xl px-4 py-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-teal-600 to-sky-500 shadow-sm" />
@@ -286,7 +402,13 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {currentUser ? (
+                <Pill tone={currentUser.role === "employee" ? "neutral" : "success"}>
+                  {currentUser.name} • {currentUser.role}
+                </Pill>
+              ) : null}
+
               <Pill tone="primary">Runs: {runs.length}</Pill>
 
               <div className="inline-flex rounded-2xl border border-slate-200 bg-white/70 p-1 shadow-sm">
@@ -302,17 +424,19 @@ export default function Page() {
                   Assistant
                 </button>
 
-                <button
-                  onClick={() => setMode("lifecycle")}
-                  className={cx(
-                    "rounded-xl px-4 py-2 text-sm font-semibold transition-all",
-                    mode === "lifecycle"
-                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                  )}
-                >
-                  Lifecycle
-                </button>
+                {(currentUser?.role === "admin" || currentUser?.role === "hr") && (
+                  <button
+                    onClick={() => setMode("lifecycle")}
+                    className={cx(
+                      "rounded-xl px-4 py-2 text-sm font-semibold transition-all",
+                      mode === "lifecycle"
+                        ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    Lifecycle
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -325,9 +449,9 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-          <div className="lg:col-span-3 space-y-4">
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+          <div className="xl:col-span-3 space-y-4">
             <Card title="Employee Profile" subtitle="Used for chat + lifecycle runs">
               <div className="space-y-3">
                 <div>
@@ -366,7 +490,7 @@ export default function Page() {
                   />
                 </div>
 
-                {mode === "lifecycle" ? (
+                {mode === "lifecycle" && (currentUser?.role === "admin" || currentUser?.role === "hr") ? (
                   <div className="grid grid-cols-2 gap-2 pt-2">
                     <Button
                       variant="primary"
@@ -385,7 +509,9 @@ export default function Page() {
                   </div>
                 ) : (
                   <div className="pt-2 text-xs text-slate-500">
-                    Assistant mode won’t provision access. Switch to Lifecycle for onboarding/offboarding.
+                    {currentUser?.role === "employee"
+                      ? "Employees can use chat and view dashboard data. Lifecycle actions are restricted to HR/Admin."
+                      : "Assistant mode won’t provision access. Switch to Lifecycle for onboarding/offboarding."}
                   </div>
                 )}
               </div>
@@ -424,7 +550,7 @@ export default function Page() {
             </Card>
           </div>
 
-          <div className="lg:col-span-6 space-y-4">
+          <div className="xl:col-span-5 space-y-4">
             <Card
               title={mode === "assistant" ? "AI Chat" : "Lifecycle Notes"}
               subtitle={mode === "assistant" ? "Calm UI • fast answers • safe policy rules" : "Runs multi-agent orchestration + tools + audit"}
@@ -523,11 +649,185 @@ export default function Page() {
                 <div className="mt-2 text-xs text-slate-500">No sources yet.</div>
               )}
             </Card>
+
+            <Card title="Employee Access Details" subtitle="Full per-system view for selected employee">
+              {!selectedEmployee ? (
+                <div className="text-sm text-slate-500">Select an employee from the table.</div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-slate-900">
+                    {selectedEmployee.name} • {selectedEmployee.role}
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2">
+                    {Object.entries(selectedEmployee.access || {}).map(([system, value]) => (
+                      <div
+                        key={system}
+                        className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2"
+                      >
+                        <span className="text-sm text-slate-700">{system}</span>
+                        <span className="text-sm font-medium text-slate-900">{String(value)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Card>
           </div>
 
-          <div className="lg:col-span-3 space-y-4">
+          <div className="xl:col-span-4 space-y-4">
+            <Card title="Employee Dashboard" subtitle="Active vs inactive workforce">
+              {dashboardLoading ? (
+                <div className="text-sm text-slate-500">Loading dashboard…</div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                      <div className="text-xs text-slate-500">Total</div>
+                      <div className="text-xl font-semibold text-slate-900">
+                        {dashboard?.summary?.total ?? 0}
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
+                      <div className="text-xs text-emerald-700">Active</div>
+                      <div className="text-xl font-semibold text-emerald-800">
+                        {dashboard?.summary?.active ?? 0}
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-rose-200 bg-rose-50 p-3">
+                      <div className="text-xs text-rose-700">Inactive</div>
+                      <div className="text-xl font-semibold text-rose-800">
+                        {dashboard?.summary?.inactive ?? 0}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Card>
+
+            <Card title="Employees" subtitle="Compact view with pagination">
+              <div className="space-y-3">
+                <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                  <input
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                    placeholder="Search name, email, manager..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setPage(1);
+                      setSearchTerm(e.target.value);
+                    }}
+                  />
+
+                  <select
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                    value={statusFilter}
+                    onChange={(e) => {
+                      setPage(1);
+                      setStatusFilter(e.target.value as "all" | "active" | "inactive");
+                    }}
+                  >
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+
+                  <select
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                    value={roleFilter}
+                    onChange={(e) => {
+                      setPage(1);
+                      setRoleFilter(e.target.value);
+                    }}
+                  >
+                    <option value="all">All Roles</option>
+                    {roleOptions.map((roleOption) => (
+                      <option key={roleOption} value={roleOption}>
+                        {roleOption}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="overflow-x-auto rounded-xl border border-slate-200">
+                  <table className="min-w-full text-sm">
+                    <thead className="sticky top-0 bg-slate-50">
+                      <tr className="border-b border-slate-200 text-left text-slate-500">
+                        <th className="px-3 py-2">Name</th>
+                        <th className="px-3 py-2">Email</th>
+                        <th className="px-3 py-2">Role</th>
+                        <th className="px-3 py-2">Status</th>
+                        <th className="px-3 py-2">Access</th>
+                        <th className="px-3 py-2">Updated</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(dashboard?.employees || []).map((emp) => (
+                        <tr
+                          key={emp.id}
+                          className="cursor-pointer border-b border-slate-100 hover:bg-slate-50"
+                          onClick={() => {
+                            setSelectedEmployee(emp);
+                            setName(emp.name || "");
+                            setEmail(emp.email || "");
+                            setManagerEmail(emp.manager_email || "");
+                            setRole(emp.role || "");
+                          }}
+                        >
+                          <td className="px-3 py-2 font-medium text-slate-900">{emp.name}</td>
+                          <td className="px-3 py-2 text-slate-700">{emp.email}</td>
+                          <td className="px-3 py-2 text-slate-700">{emp.role}</td>
+                          <td className="px-3 py-2">
+                            {emp.employment_status === "active" ? (
+                              <Pill tone="success">Active</Pill>
+                            ) : (
+                              <Pill tone="danger">Inactive</Pill>
+                            )}
+                          </td>
+                          <td className="px-3 py-2 text-slate-700">
+                            {emp.access_summary ? `${emp.access_summary.granted}/${emp.access_summary.total} granted` : "—"}
+                          </td>
+                          <td className="px-3 py-2 text-slate-500">
+                            {new Date(emp.updated_at).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+
+                      {(dashboard?.employees || []).length === 0 && (
+                        <tr>
+                          <td colSpan={6} className="px-3 py-4 text-center text-slate-500">
+                            No employees found.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-slate-500">
+                    Page {dashboard?.pagination?.page || 1} of {dashboard?.pagination?.total_pages || 1}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      disabled={(dashboard?.pagination?.page || 1) <= 1}
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      disabled={(dashboard?.pagination?.page || 1) >= (dashboard?.pagination?.total_pages || 1)}
+                      onClick={() => setPage((p) => p + 1)}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
             <Card title="Notifications" subtitle="Slack + Email via MCP">
-              <pre className="max-h-[260px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+              <pre className="max-h-[220px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
                 {JSON.stringify(notifications, null, 2)}
               </pre>
               <div className="mt-2 text-[11px] text-slate-500">
@@ -540,7 +840,7 @@ export default function Page() {
               subtitle="Deterministic outcomes (Lifecycle mode)"
               right={access?.audit_id ? <Pill tone="success">{access.audit_id}</Pill> : <Pill>—</Pill>}
             >
-              <pre className="max-h-[260px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+              <pre className="max-h-[220px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
                 {JSON.stringify(access || {}, null, 2)}
               </pre>
             </Card>

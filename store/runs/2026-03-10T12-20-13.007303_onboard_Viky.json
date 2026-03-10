@@ -1,0 +1,231 @@
+{
+  "name": "Viky",
+  "email": "viky@company.com",
+  "manager_email": "manager@company.com",
+  "role": "SRE",
+  "action": "onboard",
+  "question": null,
+  "status": "Process completed",
+  "rag_context_preview": "---\nSOURCE: onboarding_guide.md\nThis is the primary source of onboarding documentation.\n\n---\n\n# What is Onboarding?\n\nOnboarding is the structured process of enabling a new employee to become productive, secure, and aligned with company standards.\n\nIt includes:\n\n- Role context and architecture overview\n- Required system access and permissions\n- Training plan\n- Compliance and security awareness\n- Manager alignment\n- Team integration\n\n---\n\n# Onboarding Process Overview\n\n## Phase 1: Pre-Day 0\n\n- HR profile creation\n- Account provisioning (IAM, Email, Teams)\n- Hardware setup\n- Documentation access preparation\n- Training scheduling\n\n---\n\n## Phase 2: Day 0 (First Login)\n\n---\nSOURCE: onboarding_guide.md\n---\n\n# Required System Access (Role Based)\n\n## For SRE / DevOps Roles\n\n- IAM account\n- Jira project access\n- GitHub repository access\n- Confluence space access\n- Monitoring dashboards\n- CI/CD pipeline access\n- DevOps Deploy App\n- Microsoft Teams\n- Outlook mailbox\n\n---\n\n# Training Plan\n\n## Week 1\n\n- Company culture & values\n- Architecture overview\n- Infrastructure walkthrough\n- Security compliance overview\n\n## Week 2\n\n- Kubernetes best practices\n- Incident response training\n- Deployment pipe\n...\n",
+  "rag_sources": {
+    "primary": [
+      "onboarding_guide.md"
+    ],
+    "related": []
+  },
+  "access": {
+    "action": "provision",
+    "user": "Viky",
+    "role": "SRE",
+    "audit_id": "AUD-E590E7C9D9",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Failed",
+      "Confluence": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "sre"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "SRE"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Failed",
+        "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "SRE",
+            "ENG"
+          ]
+        }
+      }
+    ],
+    "verified": false,
+    "notifications": {
+      "sent": true,
+      "slack": {
+        "status": "sent",
+        "channel": "#hr-onboarding",
+        "message_id": "SLK-AD8F819307",
+        "timestamp": "2026-03-10T12:20:13.006178+00:00"
+      },
+      "email": {
+        "status": "sent",
+        "to": [
+          "employee@company.com",
+          "hr@company.com",
+          "it-support@company.com"
+        ],
+        "subject": "Welcome! Your onboarding is complete \u2705",
+        "message_id": "EML-D9505E354B",
+        "timestamp": "2026-03-10T12:20:13.006165+00:00"
+      }
+    }
+  },
+  "notifications": {
+    "slack": {
+      "provider": "slack",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "SLK-AD8F819307",
+      "timestamp": "2026-03-10T12:20:13.006178+00:00",
+      "channel": "#hr-onboarding",
+      "text_preview": "Onboarding completed \u2705 (audit attached)",
+      "meta": {}
+    },
+    "email": {
+      "provider": "email",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "EML-D9505E354B",
+      "timestamp": "2026-03-10T12:20:13.006165+00:00",
+      "to": [
+        "employee@company.com",
+        "hr@company.com",
+        "it-support@company.com"
+      ],
+      "subject": "Welcome! Your onboarding is complete \u2705",
+      "body_preview": "Welcome aboard! Your access has been provisioned.",
+      "meta": {}
+    }
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "",
+    "answer": "(no question provided)",
+    "sources": [],
+    "sources_detail": {
+      "primary": [],
+      "related": []
+    }
+  },
+  "executive_report": {
+    "employee": "Viky",
+    "role": "SRE",
+    "action": "onboard",
+    "timestamp": "2026-03-10T12:20:13.007294Z",
+    "rag_sources": {
+      "primary": [
+        "onboarding_guide.md"
+      ],
+      "related": []
+    },
+    "access": {
+      "action": "provision",
+      "user": "Viky",
+      "role": "SRE",
+      "audit_id": "AUD-E590E7C9D9",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Failed",
+        "Confluence": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "sre"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "SRE"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Failed",
+          "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "SRE",
+              "ENG"
+            ]
+          }
+        }
+      ],
+      "verified": false,
+      "notifications": {
+        "sent": true,
+        "slack": {
+          "status": "sent",
+          "channel": "#hr-onboarding",
+          "message_id": "SLK-AD8F819307",
+          "timestamp": "2026-03-10T12:20:13.006178+00:00"
+        },
+        "email": {
+          "status": "sent",
+          "to": [
+            "employee@company.com",
+            "hr@company.com",
+            "it-support@company.com"
+          ],
+          "subject": "Welcome! Your onboarding is complete \u2705",
+          "message_id": "EML-D9505E354B",
+          "timestamp": "2026-03-10T12:20:13.006165+00:00"
+        }
+      }
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "",
+      "answer": "(no question provided)",
+      "sources": [],
+      "sources_detail": {
+        "primary": [],
+        "related": []
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}

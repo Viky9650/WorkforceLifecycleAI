@@ -1,6 +1,6 @@
 {
   "captured": true,
-  "timestamp": "2026-02-16T13:07:11.182299Z",
+  "timestamp": "2026-03-10T13:57:51.139226Z",
   "employee": "Zoro",
   "checklist": [
     "Runbooks and operational notes captured",
@@ -9,5 +9,5 @@
     "Open incidents and known issues documented",
     "Outstanding tickets handed over"
   ],
-  "notes": "KT: deployment flow, runbooks, dashboards, on-call rotation."
+  "notes": "KT: runbooks, dashboards, incident ownership, deployment steps."
 }

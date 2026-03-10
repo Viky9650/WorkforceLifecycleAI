@@ -456,6 +456,198 @@ Every lifecycle run generates a structured audit artifact:
 <br/>
 
 ---
+<br/>
+
+Database Integration
+
+WorkforceLifecycleAI integrates a SQLite database to persist employee lifecycle data, access records, and workflow history.
+This enables the platform to answer workforce queries such as:
+
+List all active employees
+
+Does Viky have GitHub access?
+
+Who was recently offboarded?
+
+Show access for DevOps Engineers
+
+The database acts as the single source of truth for employee lifecycle state.
+
+Database Technology
+
+SQLite
+
+SQLAlchemy ORM
+
+Python CRUD layer
+
+Read-only tools exposed to Gemini
+
+The database is stored locally at:
+
+db/workforce_lifecycle.db
+📊 Database Schema
+1️⃣ Employees Table
+
+Stores core employee information and lifecycle status.
+
+Column	Description
+id	Unique employee ID
+name	Employee name
+email	Corporate email
+role	Job role
+department	Department
+manager_email	Reporting manager
+employment_status	active / inactive
+lifecycle_status	onboarding / active / offboarding
+created_at	Record creation time
+updated_at	Last update time
+
+Example record:
+
+{
+  "name": "Viky",
+  "email": "viky@company.com",
+  "role": "SRE",
+  "employment_status": "active",
+  "lifecycle_status": "onboarded"
+}
+2️⃣ Employee Access Table
+
+Tracks system access granted to each employee.
+
+Column	Description
+id	Access record ID
+employee_id	Employee reference
+system_name	System name
+access_status	granted / revoked
+granted_at	Access granted time
+revoked_at	Access revoked time
+
+Example:
+
+{
+  "employee": "Viky",
+  "system": "GitHub",
+  "access_status": "granted"
+}
+3️⃣ Lifecycle Runs Table
+
+Stores lifecycle workflow executions for auditing.
+
+Column	Description
+id	Run ID
+employee_email	Target employee
+action	onboard / offboard
+initiated_by	HR/Admin email
+status	success / failed
+run_timestamp	Execution time
+🤖 AI + Database Integration
+
+The Chat Agent uses Gemini with safe database tools to answer employee-related questions.
+
+Workflow:
+
+User Question
+     │
+     ▼
+Chat Agent
+     │
+     ▼
+Gemini LLM
+     │
+     ▼
+Database Tool Call
+     │
+     ▼
+SQLite Query
+     │
+     ▼
+Structured Result
+     │
+     ▼
+Gemini Response
+
+Example:
+
+User: List all active employees
+Gemini → list_active_employees() tool
+DB → return active employees
+Gemini → generate final answer
+
+This approach ensures:
+
+No hallucinated employee data
+
+Database remains the source of truth
+
+LLM focuses only on reasoning and formatting
+
+📊 Employee Dashboard
+
+The platform provides a web dashboard to monitor workforce lifecycle state.
+
+The dashboard displays:
+
+Active employees
+
+Offboarded employees
+
+System access summary
+
+Lifecycle workflow history
+
+Features:
+
+Employee search
+
+Role filtering
+
+Access visibility
+
+Lifecycle status tracking
+
+Example dashboard view:
+
+Name        Role              Status      Systems
+--------------------------------------------------------
+Viky        SRE               Active      IAM, GitHub, Jira
+Alice       DevOps Engineer   Active      8 systems
+Bob         Architect         Inactive    Access revoked
+🔐 Role-Based Access Control
+
+Lifecycle operations are restricted using role-based access.
+
+Role	Permissions
+Employee	Chat only
+HR	Onboard / Offboard employees
+Admin	Full system control
+
+Validation happens inside:
+
+api/main.py
+
+Example:
+
+def require_hr_or_admin(user_email: str):
+📁 Database Code Structure
+db/
+ ├── models.py        # SQLAlchemy models
+ ├── session.py       # DB connection
+ ├── crud.py          # DB queries
+ └── workforce_lifecycle.db
+⚡ Example Queries
+
+The AI assistant can answer questions such as:
+
+List all active employees
+Show access for Viky
+Who was offboarded recently?
+Does Alice have GitHub access?
+
+These queries are executed through Gemini tool-calling with SQLite queries.
+
+<br/>
 
 ## 🚀 Future Enhancements
 

@@ -1,12 +1,21 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Annotated
 from pathlib import Path
 import json
 
 from agents.orchestrator_agent import build_full_graph
 from api.storage_routes import router as storage_router
+
+from db.session import SessionLocal, engine
+from db.crud import (
+    init_db,
+    persist_workflow_result,
+    get_dashboard,
+    get_user_by_email,
+    get_distinct_roles,
+)
 
 app = FastAPI(title="OnboardAI API", version="1.0")
 
@@ -23,6 +32,10 @@ app.add_middleware(
 app.include_router(storage_router)
 
 graph = build_full_graph()
+
+# --- Initialize DB ---
+init_db(engine)
+
 
 # -----------------------
 # Request models
@@ -50,6 +63,75 @@ class OffboardRequest(BaseModel):
     role: str
     question: Optional[str] = None
     kt_notes: Optional[str] = None
+
+
+# -----------------------
+# Auth helpers
+# -----------------------
+def require_hr_or_admin(user_email: str):
+    db = SessionLocal()
+    try:
+        user = get_user_by_email(db, user_email)
+        if not user or not user.is_active:
+            raise HTTPException(status_code=401, detail="User not found or inactive")
+        if user.role not in ["admin", "hr"]:
+            raise HTTPException(status_code=403, detail="Only HR or Admin can perform this action")
+        return user
+    finally:
+        db.close()
+
+
+# -----------------------
+# Current user
+# -----------------------
+@app.get("/me")
+def me(x_user_email: Annotated[str, Header(...)]):
+    db = SessionLocal()
+    try:
+        user = get_user_by_email(db, x_user_email)
+        if not user or not user.is_active:
+            raise HTTPException(status_code=401, detail="User not found or inactive")
+        return {
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+        }
+    finally:
+        db.close()
+
+
+# -----------------------
+# Employee dashboard
+# -----------------------
+@app.get("/employees/dashboard")
+def employees_dashboard(
+    page: Annotated[int, Query(ge=1)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=50)] = 10,
+    search: str | None = None,
+    status: str | None = None,
+    role: str | None = None,
+):
+    db = SessionLocal()
+    try:
+        return get_dashboard(
+            db,
+            page=page,
+            page_size=page_size,
+            search=search,
+            status=status,
+            role=role,
+        )
+    finally:
+        db.close()
+
+
+@app.get("/employees/roles")
+def employee_roles():
+    db = SessionLocal()
+    try:
+        return {"roles": get_distinct_roles(db)}
+    finally:
+        db.close()
 
 
 # -----------------------
@@ -141,8 +223,10 @@ def chat(req: ChatRequest) -> Dict[str, Any]:
 # Lifecycle endpoints
 # -----------------------
 @app.post("/onboard")
-def onboard(req: OnboardRequest):
-    return graph.invoke(
+def onboard(req: OnboardRequest, x_user_email: Annotated[str, Header(...)]):
+    current_user = require_hr_or_admin(x_user_email)
+
+    result = graph.invoke(
         {
             "name": req.name,
             "email": req.email,
@@ -154,10 +238,25 @@ def onboard(req: OnboardRequest):
         }
     )
 
+    db = SessionLocal()
+    try:
+        persist_workflow_result(
+            db,
+            result=result,
+            initiated_by=current_user.email,
+            initiator_role=current_user.role,
+        )
+    finally:
+        db.close()
+
+    return result
+
 
 @app.post("/offboard")
-def offboard(req: OffboardRequest):
-    return graph.invoke(
+def offboard(req: OffboardRequest, x_user_email: Annotated[str, Header(...)]):
+    current_user = require_hr_or_admin(x_user_email)
+
+    result = graph.invoke(
         {
             "name": req.name,
             "email": req.email,
@@ -170,6 +269,19 @@ def offboard(req: OffboardRequest):
         }
     )
 
+    db = SessionLocal()
+    try:
+        persist_workflow_result(
+            db,
+            result=result,
+            initiated_by=current_user.email,
+            initiator_role=current_user.role,
+        )
+    finally:
+        db.close()
+
+    return result
+
 
 # -----------------------
 # Run loader endpoint
@@ -177,8 +289,14 @@ def offboard(req: OffboardRequest):
 RUNS_DIR = Path("store/runs").resolve()
 
 
-@app.get("/run")
-def get_run(path: str = Query(..., description="Run filename or path returned by /runs")):
+@app.get(
+    "/run",
+    responses={
+        400: {"description": "Invalid path"},
+        404: {"description": "Run not found"},
+    },
+)
+def get_run(path: Annotated[str, Query(description="Run filename or path returned by /runs")]):
     requested = Path(path)
 
     if requested.parent == Path("."):

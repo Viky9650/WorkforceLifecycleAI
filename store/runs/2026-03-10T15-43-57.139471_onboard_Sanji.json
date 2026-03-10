@@ -1,0 +1,351 @@
+{
+  "name": "Sanji",
+  "email": "sanji@onepiece.com",
+  "manager_email": "luffy@onepiece.com",
+  "role": "Devops",
+  "action": "onboard",
+  "question": "What access is required for the application?",
+  "status": "Process completed",
+  "rag_context_preview": "---\nSOURCE: security.md\n# Security Architecture & Compliance\n\n## Authentication & Authorization\n\n- OAuth 2.0\n- JWT-based session management\n- Role-Based Access Control (RBAC)\n- Principle of least privilege\n\n---\n\n## Data Security\n\n- Encryption at rest\n- TLS encryption in transit\n- PII compliance\n- GDPR aligned\n- SOC 2 aligned\n\n---\n\n## Access Governance\n\nAccess provisioning is:\n\n- Policy-driven\n- Role-based\n- Logged with audit_id\n- Automatically revoked during offboarding\n\n---\n\n## API Security\n\n- Rate limiting\n- Input validation\n- SQL injection prevention\n- XSS protection\n- CORS configuration\n\n---\n\n## Audit Logging\n\nEvery onboarding/offboarding run generates:",
+  "rag_sources": {
+    "primary": [
+      "security.md"
+    ],
+    "related": []
+  },
+  "access": {
+    "action": "provision",
+    "user": "Sanji",
+    "role": "DevOps Engineer",
+    "audit_id": "AUD-4F2F7E6865",
+    "systems": {
+      "IAM": "Granted",
+      "Jira": "Granted",
+      "GitHub": "Failed",
+      "Confluence": "Granted",
+      "Devops Deploy App": "Granted",
+      "Service Now": "Granted",
+      "Outlook": "Granted",
+      "Teams": "Granted"
+    },
+    "steps": [
+      {
+        "system": "IAM",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "devops"
+          ]
+        }
+      },
+      {
+        "system": "Jira",
+        "status": "Granted",
+        "details": {
+          "projects": [
+            "DEVOPS"
+          ],
+          "roles": [
+            "Developer"
+          ]
+        }
+      },
+      {
+        "system": "GitHub",
+        "status": "Failed",
+        "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+      },
+      {
+        "system": "Confluence",
+        "status": "Granted",
+        "details": {
+          "spaces": [
+            "DEVOPS",
+            "ENG"
+          ]
+        }
+      },
+      {
+        "system": "Devops Deploy App",
+        "status": "Granted",
+        "details": {
+          "environments": [
+            "staging",
+            "prod"
+          ],
+          "permissions": [
+            "deploy",
+            "rollback"
+          ]
+        }
+      },
+      {
+        "system": "Service Now",
+        "status": "Granted",
+        "details": {
+          "groups": [
+            "IT-DevOps"
+          ],
+          "roles": [
+            "itil"
+          ]
+        }
+      },
+      {
+        "system": "Outlook",
+        "status": "Granted",
+        "details": {
+          "mailbox": true,
+          "distribution_lists": [
+            "eng-all@company.com",
+            "devops@company.com"
+          ]
+        }
+      },
+      {
+        "system": "Teams",
+        "status": "Granted",
+        "details": {
+          "teams": [
+            "Engineering",
+            "DevOps"
+          ],
+          "channels": [
+            "announcements",
+            "oncall",
+            "deployments"
+          ]
+        }
+      }
+    ],
+    "verified": false,
+    "notifications": {
+      "sent": true,
+      "slack": {
+        "status": "sent",
+        "channel": "#hr-onboarding",
+        "message_id": "SLK-6F417EE44B",
+        "timestamp": "2026-03-10T15:43:54.063530+00:00"
+      },
+      "email": {
+        "status": "sent",
+        "to": [
+          "employee@company.com",
+          "hr@company.com",
+          "it-support@company.com"
+        ],
+        "subject": "Welcome! Your onboarding is complete \u2705",
+        "message_id": "EML-8366642FF1",
+        "timestamp": "2026-03-10T15:43:54.063517+00:00"
+      }
+    }
+  },
+  "notifications": {
+    "slack": {
+      "provider": "slack",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "SLK-6F417EE44B",
+      "timestamp": "2026-03-10T15:43:54.063530+00:00",
+      "channel": "#hr-onboarding",
+      "text_preview": "Onboarding completed \u2705 (audit attached)",
+      "meta": {}
+    },
+    "email": {
+      "provider": "email",
+      "mode": "mock",
+      "status": "sent",
+      "message_id": "EML-8366642FF1",
+      "timestamp": "2026-03-10T15:43:54.063517+00:00",
+      "to": [
+        "employee@company.com",
+        "hr@company.com",
+        "it-support@company.com"
+      ],
+      "subject": "Welcome! Your onboarding is complete \u2705",
+      "body_preview": "Welcome aboard! Your access has been provisioned.",
+      "meta": {}
+    }
+  },
+  "kt": {
+    "captured": false
+  },
+  "chat": {
+    "enabled": true,
+    "question": "What access is required for the application?",
+    "answer": "The internal context describes the *system* for managing access (Role-Based Access Control, policy-driven, principle of least privilege) but does not specify the *actual access required for the application* for a Devops role.\n\n**What is missing:** Specific access requirements for the application for the Devops role.\n**Suggestion:** You would typically find this information in a role matrix, application-specific access documentation, or by consulting with the application owner or security team.",
+    "sources": [
+      "security.md"
+    ],
+    "sources_detail": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    }
+  },
+  "executive_report": {
+    "employee": "Sanji",
+    "role": "Devops",
+    "action": "onboard",
+    "timestamp": "2026-03-10T15:43:57.139454Z",
+    "rag_sources": {
+      "primary": [
+        "security.md"
+      ],
+      "related": []
+    },
+    "access": {
+      "action": "provision",
+      "user": "Sanji",
+      "role": "DevOps Engineer",
+      "audit_id": "AUD-4F2F7E6865",
+      "systems": {
+        "IAM": "Granted",
+        "Jira": "Granted",
+        "GitHub": "Failed",
+        "Confluence": "Granted",
+        "Devops Deploy App": "Granted",
+        "Service Now": "Granted",
+        "Outlook": "Granted",
+        "Teams": "Granted"
+      },
+      "steps": [
+        {
+          "system": "IAM",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "devops"
+            ]
+          }
+        },
+        {
+          "system": "Jira",
+          "status": "Granted",
+          "details": {
+            "projects": [
+              "DEVOPS"
+            ],
+            "roles": [
+              "Developer"
+            ]
+          }
+        },
+        {
+          "system": "GitHub",
+          "status": "Failed",
+          "error": "Server error '500 Internal Server Error' for url 'http://127.0.0.1:9001/github/provision'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500"
+        },
+        {
+          "system": "Confluence",
+          "status": "Granted",
+          "details": {
+            "spaces": [
+              "DEVOPS",
+              "ENG"
+            ]
+          }
+        },
+        {
+          "system": "Devops Deploy App",
+          "status": "Granted",
+          "details": {
+            "environments": [
+              "staging",
+              "prod"
+            ],
+            "permissions": [
+              "deploy",
+              "rollback"
+            ]
+          }
+        },
+        {
+          "system": "Service Now",
+          "status": "Granted",
+          "details": {
+            "groups": [
+              "IT-DevOps"
+            ],
+            "roles": [
+              "itil"
+            ]
+          }
+        },
+        {
+          "system": "Outlook",
+          "status": "Granted",
+          "details": {
+            "mailbox": true,
+            "distribution_lists": [
+              "eng-all@company.com",
+              "devops@company.com"
+            ]
+          }
+        },
+        {
+          "system": "Teams",
+          "status": "Granted",
+          "details": {
+            "teams": [
+              "Engineering",
+              "DevOps"
+            ],
+            "channels": [
+              "announcements",
+              "oncall",
+              "deployments"
+            ]
+          }
+        }
+      ],
+      "verified": false,
+      "notifications": {
+        "sent": true,
+        "slack": {
+          "status": "sent",
+          "channel": "#hr-onboarding",
+          "message_id": "SLK-6F417EE44B",
+          "timestamp": "2026-03-10T15:43:54.063530+00:00"
+        },
+        "email": {
+          "status": "sent",
+          "to": [
+            "employee@company.com",
+            "hr@company.com",
+            "it-support@company.com"
+          ],
+          "subject": "Welcome! Your onboarding is complete \u2705",
+          "message_id": "EML-8366642FF1",
+          "timestamp": "2026-03-10T15:43:54.063517+00:00"
+        }
+      }
+    },
+    "kt": {
+      "captured": false
+    },
+    "chat": {
+      "enabled": true,
+      "question": "What access is required for the application?",
+      "answer": "The internal context describes the *system* for managing access (Role-Based Access Control, policy-driven, principle of least privilege) but does not specify the *actual access required for the application* for a Devops role.\n\n**What is missing:** Specific access requirements for the application for the Devops role.\n**Suggestion:** You would typically find this information in a role matrix, application-specific access documentation, or by consulting with the application owner or security team.",
+      "sources": [
+        "security.md"
+      ],
+      "sources_detail": {
+        "primary": [
+          "security.md"
+        ],
+        "related": []
+      }
+    },
+    "kpis": {
+      "manual_onboarding_time": "3\u20135 days",
+      "agentic_onboarding_time": "30\u201360 minutes",
+      "estimated_time_saved": "\u224880%",
+      "access_leakage_risk": "Reduced via Day-0 revocation + audit trail",
+      "audit_readiness": "Immediate (per-run evidence captured)"
+    },
+    "status": "Completed"
+  }
+}
