@@ -46,7 +46,7 @@ type DashboardResp = {
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "/api";
-const DEV_USER_EMAIL = "hr@company.com";
+const DEV_USER_EMAIL = process.env.NEXT_PUBLIC_DEMO_USER || "hr@company.com";
 
 function cx(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
