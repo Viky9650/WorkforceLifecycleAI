@@ -134,7 +134,9 @@ function StatusDot({ status }: { status: string }) {
   return (
     <span className="inline-flex items-center gap-2 text-xs">
       <span className={cx("h-2.5 w-2.5 rounded-full", ok ? "bg-emerald-500" : "bg-rose-500")} />
-      <span className={cx("font-medium", ok ? "text-emerald-700" : "text-rose-700")}>{ok ? "ok" : status}</span>
+      <span className={cx("font-medium", ok ? "text-emerald-700" : "text-rose-700")}>
+        {ok ? "ok" : status}
+      </span>
     </span>
   );
 }
@@ -201,7 +203,12 @@ export default function Page() {
 
   const [chatMsgs, setChatMsgs] = useState<
     { who: "user" | "assistant" | "event"; text: string; meta?: any }[]
-  >([{ who: "assistant", text: "Hi 👋 Ask onboarding questions. Policy questions use access policy; knowledge questions use RAG docs." }]);
+  >([
+    {
+      who: "assistant",
+      text: "Hi 👋 Ask onboarding questions. Policy questions use access policy; knowledge questions use RAG docs.",
+    },
+  ]);
 
   async function refreshRuns() {
     try {
@@ -268,8 +275,10 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    loadDashboard();
-  }, [page, pageSize, searchTerm, statusFilter, roleFilter]);
+    if (mode === "lifecycle" && (currentUser?.role === "admin" || currentUser?.role === "hr")) {
+      loadDashboard();
+    }
+  }, [mode, page, searchTerm, statusFilter, roleFilter, currentUser]);
 
   useEffect(() => {
     if (currentUser?.role === "employee" && mode === "lifecycle") {
@@ -338,11 +347,16 @@ export default function Page() {
       const data = await r.json();
       setResp(data);
       await refreshRuns();
-      await loadDashboard();
+      if (mode === "lifecycle") {
+        await loadDashboard();
+      }
 
       setChatMsgs((m) => [
         ...m,
-        { who: "event", text: endpoint === "/onboard" ? "Lifecycle: Onboard completed" : "Lifecycle: Offboard completed" },
+        {
+          who: "event",
+          text: endpoint === "/onboard" ? "Lifecycle: Onboard completed" : "Lifecycle: Offboard completed",
+        },
       ]);
     } catch (e: any) {
       setError(e?.message || "Request failed");
@@ -383,11 +397,17 @@ export default function Page() {
       setChatMsgs((m) => [...m, { who: "assistant", text: ans, meta: data }]);
     } catch (e: any) {
       setError(e?.message || "Chat failed");
-      setChatMsgs((m) => [...m, { who: "assistant", text: "⚠️ Chat failed. Please check API and credentials." }]);
+      setChatMsgs((m) => [
+        ...m,
+        { who: "assistant", text: "⚠️ Chat failed. Please check API and credentials." },
+      ]);
     } finally {
       setChatLoading(false);
     }
   }
+
+  const showLifecycleAdminView =
+    mode === "lifecycle" && (currentUser?.role === "admin" || currentUser?.role === "hr");
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-sky-50">
@@ -395,10 +415,16 @@ export default function Page() {
         <div className="mx-auto max-w-7xl px-4 py-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-teal-600 to-sky-500 shadow-sm" />
+              <img
+                src="/logo.png"
+                alt="WorkforceLifecycleAI Logo"
+                className="h-10 w-10 object-contain"
+              />
               <div>
                 <div className="text-lg font-semibold text-slate-900">WorkforceLifecycleAI</div>
-                <div className="text-xs text-slate-500">From onboarding to offboarding — in one intelligent orbit.</div>
+                <div className="text-xs text-slate-500">
+                  From onboarding to offboarding — in one intelligent orbit.
+                </div>
               </div>
             </div>
 
@@ -490,7 +516,7 @@ export default function Page() {
                   />
                 </div>
 
-                {mode === "lifecycle" && (currentUser?.role === "admin" || currentUser?.role === "hr") ? (
+                {showLifecycleAdminView ? (
                   <div className="grid grid-cols-2 gap-2 pt-2">
                     <Button
                       variant="primary"
@@ -510,7 +536,7 @@ export default function Page() {
                 ) : (
                   <div className="pt-2 text-xs text-slate-500">
                     {currentUser?.role === "employee"
-                      ? "Employees can use chat and view dashboard data. Lifecycle actions are restricted to HR/Admin."
+                      ? "Employees can use chat only. Lifecycle operations are restricted to HR/Admin."
                       : "Assistant mode won’t provision access. Switch to Lifecycle for onboarding/offboarding."}
                   </div>
                 )}
@@ -550,10 +576,14 @@ export default function Page() {
             </Card>
           </div>
 
-          <div className="xl:col-span-5 space-y-4">
+          <div className={cx("space-y-4", showLifecycleAdminView ? "xl:col-span-5" : "xl:col-span-9")}>
             <Card
               title={mode === "assistant" ? "AI Chat" : "Lifecycle Notes"}
-              subtitle={mode === "assistant" ? "Calm UI • fast answers • safe policy rules" : "Runs multi-agent orchestration + tools + audit"}
+              subtitle={
+                mode === "assistant"
+                  ? "Calm UI • fast answers • safe policy rules"
+                  : "Runs multi-agent orchestration + tools + audit"
+              }
               right={
                 mode === "assistant" ? (
                   <span className="inline-flex items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-700">
@@ -650,207 +680,214 @@ export default function Page() {
               )}
             </Card>
 
-            <Card title="Employee Access Details" subtitle="Full per-system view for selected employee">
-              {!selectedEmployee ? (
-                <div className="text-sm text-slate-500">Select an employee from the table.</div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="text-sm font-medium text-slate-900">
-                    {selectedEmployee.name} • {selectedEmployee.role}
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-2">
-                    {Object.entries(selectedEmployee.access || {}).map(([system, value]) => (
-                      <div
-                        key={system}
-                        className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2"
-                      >
-                        <span className="text-sm text-slate-700">{system}</span>
-                        <span className="text-sm font-medium text-slate-900">{String(value)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </Card>
-          </div>
-
-          <div className="xl:col-span-4 space-y-4">
-            <Card title="Employee Dashboard" subtitle="Active vs inactive workforce">
-              {dashboardLoading ? (
-                <div className="text-sm text-slate-500">Loading dashboard…</div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                      <div className="text-xs text-slate-500">Total</div>
-                      <div className="text-xl font-semibold text-slate-900">
-                        {dashboard?.summary?.total ?? 0}
-                      </div>
+            {showLifecycleAdminView && (
+              <Card title="Employee Access Details" subtitle="Full per-system view for selected employee">
+                {!selectedEmployee ? (
+                  <div className="text-sm text-slate-500">Select an employee from the table.</div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="text-sm font-medium text-slate-900">
+                      {selectedEmployee.name} • {selectedEmployee.role}
                     </div>
-                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
-                      <div className="text-xs text-emerald-700">Active</div>
-                      <div className="text-xl font-semibold text-emerald-800">
-                        {dashboard?.summary?.active ?? 0}
-                      </div>
-                    </div>
-                    <div className="rounded-xl border border-rose-200 bg-rose-50 p-3">
-                      <div className="text-xs text-rose-700">Inactive</div>
-                      <div className="text-xl font-semibold text-rose-800">
-                        {dashboard?.summary?.inactive ?? 0}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </Card>
 
-            <Card title="Employees" subtitle="Compact view with pagination">
-              <div className="space-y-3">
-                <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                  <input
-                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-                    placeholder="Search name, email, manager..."
-                    value={searchTerm}
-                    onChange={(e) => {
-                      setPage(1);
-                      setSearchTerm(e.target.value);
-                    }}
-                  />
-
-                  <select
-                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-                    value={statusFilter}
-                    onChange={(e) => {
-                      setPage(1);
-                      setStatusFilter(e.target.value as "all" | "active" | "inactive");
-                    }}
-                  >
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-
-                  <select
-                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-                    value={roleFilter}
-                    onChange={(e) => {
-                      setPage(1);
-                      setRoleFilter(e.target.value);
-                    }}
-                  >
-                    <option value="all">All Roles</option>
-                    {roleOptions.map((roleOption) => (
-                      <option key={roleOption} value={roleOption}>
-                        {roleOption}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="overflow-x-auto rounded-xl border border-slate-200">
-                  <table className="min-w-full text-sm">
-                    <thead className="sticky top-0 bg-slate-50">
-                      <tr className="border-b border-slate-200 text-left text-slate-500">
-                        <th className="px-3 py-2">Name</th>
-                        <th className="px-3 py-2">Email</th>
-                        <th className="px-3 py-2">Role</th>
-                        <th className="px-3 py-2">Status</th>
-                        <th className="px-3 py-2">Access</th>
-                        <th className="px-3 py-2">Updated</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(dashboard?.employees || []).map((emp) => (
-                        <tr
-                          key={emp.id}
-                          className="cursor-pointer border-b border-slate-100 hover:bg-slate-50"
-                          onClick={() => {
-                            setSelectedEmployee(emp);
-                            setName(emp.name || "");
-                            setEmail(emp.email || "");
-                            setManagerEmail(emp.manager_email || "");
-                            setRole(emp.role || "");
-                          }}
+                    <div className="grid grid-cols-1 gap-2">
+                      {Object.entries(selectedEmployee.access || {}).map(([system, value]) => (
+                        <div
+                          key={system}
+                          className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2"
                         >
-                          <td className="px-3 py-2 font-medium text-slate-900">{emp.name}</td>
-                          <td className="px-3 py-2 text-slate-700">{emp.email}</td>
-                          <td className="px-3 py-2 text-slate-700">{emp.role}</td>
-                          <td className="px-3 py-2">
-                            {emp.employment_status === "active" ? (
-                              <Pill tone="success">Active</Pill>
-                            ) : (
-                              <Pill tone="danger">Inactive</Pill>
-                            )}
-                          </td>
-                          <td className="px-3 py-2 text-slate-700">
-                            {emp.access_summary ? `${emp.access_summary.granted}/${emp.access_summary.total} granted` : "—"}
-                          </td>
-                          <td className="px-3 py-2 text-slate-500">
-                            {new Date(emp.updated_at).toLocaleDateString()}
-                          </td>
-                        </tr>
+                          <span className="text-sm text-slate-700">{system}</span>
+                          <span className="text-sm font-medium text-slate-900">{String(value)}</span>
+                        </div>
                       ))}
-
-                      {(dashboard?.employees || []).length === 0 && (
-                        <tr>
-                          <td colSpan={6} className="px-3 py-4 text-center text-slate-500">
-                            No employees found.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-slate-500">
-                    Page {dashboard?.pagination?.page || 1} of {dashboard?.pagination?.total_pages || 1}
+                    </div>
                   </div>
-
-                  <div className="flex gap-2">
-                    <Button
-                      disabled={(dashboard?.pagination?.page || 1) <= 1}
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      disabled={(dashboard?.pagination?.page || 1) >= (dashboard?.pagination?.total_pages || 1)}
-                      onClick={() => setPage((p) => p + 1)}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card title="Notifications" subtitle="Slack + Email via MCP">
-              <pre className="max-h-[220px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
-                {JSON.stringify(notifications, null, 2)}
-              </pre>
-              <div className="mt-2 text-[11px] text-slate-500">
-                If this is empty, your frontend is likely calling the wrong API base. Set NEXT_PUBLIC_API_BASE to port 9000.
-              </div>
-            </Card>
-
-            <Card
-              title="Audit / Tool Evidence"
-              subtitle="Deterministic outcomes (Lifecycle mode)"
-              right={access?.audit_id ? <Pill tone="success">{access.audit_id}</Pill> : <Pill>—</Pill>}
-            >
-              <pre className="max-h-[220px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
-                {JSON.stringify(access || {}, null, 2)}
-              </pre>
-            </Card>
-
-            <Card title="RAG Sources" subtitle="Where grounding came from">
-              <pre className="max-h-[220px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
-                {JSON.stringify(resp?.rag_sources || resp?.rag_sources_detail || {}, null, 2)}
-              </pre>
-            </Card>
+                )}
+              </Card>
+            )}
           </div>
+
+          {showLifecycleAdminView && (
+            <div className="xl:col-span-4 space-y-4">
+              <Card title="Employee Dashboard" subtitle="Active vs inactive workforce">
+                {dashboardLoading ? (
+                  <div className="text-sm text-slate-500">Loading dashboard…</div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                        <div className="text-xs text-slate-500">Total</div>
+                        <div className="text-xl font-semibold text-slate-900">
+                          {dashboard?.summary?.total ?? 0}
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
+                        <div className="text-xs text-emerald-700">Active</div>
+                        <div className="text-xl font-semibold text-emerald-800">
+                          {dashboard?.summary?.active ?? 0}
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-rose-200 bg-rose-50 p-3">
+                        <div className="text-xs text-rose-700">Inactive</div>
+                        <div className="text-xl font-semibold text-rose-800">
+                          {dashboard?.summary?.inactive ?? 0}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Card>
+
+              <Card title="Employees" subtitle="Compact view with pagination">
+                <div className="space-y-3">
+                  <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                    <input
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                      placeholder="Search name, email, manager..."
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setPage(1);
+                        setSearchTerm(e.target.value);
+                      }}
+                    />
+
+                    <select
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                      value={statusFilter}
+                      onChange={(e) => {
+                        setPage(1);
+                        setStatusFilter(e.target.value as "all" | "active" | "inactive");
+                      }}
+                    >
+                      <option value="all">All Status</option>
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                    </select>
+
+                    <select
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                      value={roleFilter}
+                      onChange={(e) => {
+                        setPage(1);
+                        setRoleFilter(e.target.value);
+                      }}
+                    >
+                      <option value="all">All Roles</option>
+                      {roleOptions.map((roleOption) => (
+                        <option key={roleOption} value={roleOption}>
+                          {roleOption}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="overflow-x-auto rounded-xl border border-slate-200">
+                    <table className="min-w-full text-sm">
+                      <thead className="sticky top-0 bg-slate-50">
+                        <tr className="border-b border-slate-200 text-left text-slate-500">
+                          <th className="px-3 py-2">Name</th>
+                          <th className="px-3 py-2">Email</th>
+                          <th className="px-3 py-2">Role</th>
+                          <th className="px-3 py-2">Status</th>
+                          <th className="px-3 py-2">Access</th>
+                          <th className="px-3 py-2">Updated</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(dashboard?.employees || []).map((emp) => (
+                          <tr
+                            key={emp.id}
+                            className="cursor-pointer border-b border-slate-100 hover:bg-slate-50"
+                            onClick={() => {
+                              setSelectedEmployee(emp);
+                              setName(emp.name || "");
+                              setEmail(emp.email || "");
+                              setManagerEmail(emp.manager_email || "");
+                              setRole(emp.role || "");
+                            }}
+                          >
+                            <td className="px-3 py-2 font-medium text-slate-900">{emp.name}</td>
+                            <td className="px-3 py-2 text-slate-700">{emp.email}</td>
+                            <td className="px-3 py-2 text-slate-700">{emp.role}</td>
+                            <td className="px-3 py-2">
+                              {emp.employment_status === "active" ? (
+                                <Pill tone="success">Active</Pill>
+                              ) : (
+                                <Pill tone="danger">Inactive</Pill>
+                              )}
+                            </td>
+                            <td className="px-3 py-2 text-slate-700">
+                              {emp.access_summary
+                                ? `${emp.access_summary.granted}/${emp.access_summary.total} granted`
+                                : "—"}
+                            </td>
+                            <td className="px-3 py-2 text-slate-500">
+                              {new Date(emp.updated_at).toLocaleDateString()}
+                            </td>
+                          </tr>
+                        ))}
+
+                        {(dashboard?.employees || []).length === 0 && (
+                          <tr>
+                            <td colSpan={6} className="px-3 py-4 text-center text-slate-500">
+                              No employees found.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs text-slate-500">
+                      Page {dashboard?.pagination?.page || 1} of {dashboard?.pagination?.total_pages || 1}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        disabled={(dashboard?.pagination?.page || 1) <= 1}
+                        onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      >
+                        Previous
+                      </Button>
+                      <Button
+                        disabled={(dashboard?.pagination?.page || 1) >= (dashboard?.pagination?.total_pages || 1)}
+                        onClick={() => setPage((p) => p + 1)}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              <Card title="Notifications" subtitle="Slack + Email via MCP">
+                <pre className="max-h-[180px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+                  {JSON.stringify(notifications, null, 2)}
+                </pre>
+                <div className="mt-2 text-[11px] text-slate-500">
+                  If this is empty, your frontend is likely calling the wrong API base. Set NEXT_PUBLIC_API_BASE to port
+                  9000.
+                </div>
+              </Card>
+
+              <Card
+                title="Audit / Tool Evidence"
+                subtitle="Deterministic outcomes (Lifecycle mode)"
+                right={access?.audit_id ? <Pill tone="success">{access.audit_id}</Pill> : <Pill>—</Pill>}
+              >
+                <pre className="max-h-[180px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+                  {JSON.stringify(access || {}, null, 2)}
+                </pre>
+              </Card>
+
+              <Card title="RAG Sources" subtitle="Where grounding came from">
+                <pre className="max-h-[180px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+                  {JSON.stringify(resp?.rag_sources || resp?.rag_sources_detail || {}, null, 2)}
+                </pre>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </main>
